@@ -149,7 +149,6 @@ public class TestAnimator implements Animator {
 
 	private int isHittingWall(){
 
-
 		return 0;
 	}
 	
