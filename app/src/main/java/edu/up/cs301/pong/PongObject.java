@@ -26,5 +26,7 @@ public abstract class PongObject {
 
     public abstract void draw( Canvas g );
 
+    public abstract boolean isCollidingWith( PongObject pongObject );
+
 
 }
