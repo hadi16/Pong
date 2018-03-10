@@ -3,6 +3,7 @@ package edu.up.cs301.pong;
 import android.graphics.*;
 import android.view.MotionEvent;
 
+import edu.up.cs301.animation.AnimationSurface;
 import edu.up.cs301.animation.Animator;
 
 
@@ -19,6 +20,13 @@ public class TestAnimator implements Animator {
 	// instance variables
 	private int count = 0; // counts the number of logical clock ticks
 	private boolean goBackwards = false; // whether clock is ticking backwards
+
+	private Paint wallPaint = new Paint();
+
+	private int velX = 5;
+	private int velY = 2;
+	private int posX = 100;
+	private int posY = 100;
 	
 	/**
 	 * Interval between animation frames: .03 seconds (i.e., about 33 times
@@ -37,7 +45,18 @@ public class TestAnimator implements Animator {
 	 */
 	public int backgroundColor() {
 		// create/return the background color
-		return Color.rgb(180, 200, 255);
+		return Color.rgb(255, 255, 255);
+	}
+
+	/**
+	 * The wall color: a black color.
+	 *
+	 * @return the wall color onto which we will draw the image.
+	 */
+	public int wallColor(){
+		//create/return the wall color
+
+		return Color.rgb(100,100,100);
 	}
 	
 	/**
@@ -64,6 +83,14 @@ public class TestAnimator implements Animator {
 		else {
 			count++;
 		}
+
+
+
+
+		wallPaint.setColor(wallColor());
+		g.drawRect(0,0,100,2000,wallPaint);
+		g.drawRect(0,0,2000,100,wallPaint);
+		g.drawRect(1950,0,2100,2000,wallPaint);
 		
 		// Determine the pixel position of our ball.  Multiplying by 15
 		// has the effect of moving 15 pixel per frame.  Modding by 600
@@ -74,10 +101,21 @@ public class TestAnimator implements Animator {
 		if (num < 0) num += 600;
 		
 		// Draw the ball in the correct position.
-		Paint redPaint = new Paint();
-		redPaint.setColor(Color.RED);
-		g.drawCircle(num, num, 60, redPaint);
-		redPaint.setColor(0xff0000ff);
+		Paint ballPaint = new Paint();
+		ballPaint.setColor(Color.BLACK);
+
+
+		if( isHittingWall() == 0 ){
+
+			posX += velX;
+			posY += velY;
+
+
+		}
+
+
+		g.drawCircle(posX, posY, 60, ballPaint);
+		ballPaint.setColor(0xff0000ff);
 	}
 
 	/**
@@ -107,6 +145,12 @@ public class TestAnimator implements Animator {
 		{
 			goBackwards = !goBackwards;
 		}
+	}
+
+	private int isHittingWall(){
+
+
+		return 0;
 	}
 	
 	
