@@ -23,8 +23,8 @@ public class TestAnimator implements Animator {
 
 	private Paint wallPaint = new Paint();
 
-	private int velX = 5;
-	private int velY = 2;
+	private int velX = 50;
+	private int velY = 20;
 	private int posX = 100;
 	private int posY = 100;
 
@@ -113,8 +113,9 @@ public class TestAnimator implements Animator {
 
 		if( isHittingWall() == 0 ){
 
-			posX += velX;
-			posY += velY;
+			//BallObject.posX += velX;
+			ball.setPosX(ball.getPosX()+velX);
+			ball.setPosY(ball.getPosY()+velY);
 
 
 		}

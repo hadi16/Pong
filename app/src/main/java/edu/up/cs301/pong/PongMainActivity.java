@@ -40,9 +40,9 @@ public class PongMainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pong_main);
 
-		initX = 100;
-		initY = 100;
-		ballColor = Color.rgb(255,255,255);
+		initX = 300;
+		initY = 300;
+		ballColor = Color.rgb(0,0,0);
 
 		ballObject = new BallObject(initX,initY,ballColor);
 
