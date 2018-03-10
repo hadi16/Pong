@@ -3,8 +3,10 @@ package edu.up.cs301.pong;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.annotation.IdRes;
 import android.view.Menu;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 
 import edu.up.cs301.animation.AnimationSurface;
 
@@ -20,6 +22,8 @@ import edu.up.cs301.animation.AnimationSurface;
  * 
  */
 public class PongMainActivity extends Activity {
+    private RadioGroup radioGroupDifficulty;
+    private AnimationSurface mySurface;
 
 
 	private BallObject ballObject;
@@ -43,8 +47,27 @@ public class PongMainActivity extends Activity {
 		ballObject = new BallObject(initX,initY,ballColor);
 
 		// Connect the animation surface with the animator
-		AnimationSurface mySurface = (AnimationSurface) this
-				.findViewById(R.id.animationSurface);
+		mySurface = (AnimationSurface) this.findViewById(R.id.animationSurface);
 		mySurface.setAnimator(new TestAnimator(ballObject));
+
+        Listener listeners = new Listener();
+        radioGroupDifficulty = (RadioGroup)findViewById(R.id.radioGroupDifficulty);
+        radioGroupDifficulty.setOnCheckedChangeListener(listeners);
 	}
+
+	private class Listener implements RadioGroup.OnCheckedChangeListener{
+        @Override
+        public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+            if (group.getId() != R.id.radioGroupDifficulty) return;
+
+            if (checkedId == R.id.radioButtonBeginner) {
+                // Make paddle large
+                System.out.println("Beginner");
+            }
+            else if (checkedId == R.id.radioButtonExpert) {
+                // Make paddle small
+                System.out.println("Expert");
+            }
+        }
+    }
 }
