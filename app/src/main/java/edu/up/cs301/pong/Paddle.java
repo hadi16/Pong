@@ -1,11 +1,6 @@
 package edu.up.cs301.pong;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
-
-/**
- * Created by Alex Hadi on 3/10/2018.
- */
 
 public class Paddle extends PongObject {
     private int paddleLength;
@@ -16,11 +11,16 @@ public class Paddle extends PongObject {
 
     @Override
     public void draw(Canvas canvas) {
+        canvas.drawRect(posX, posY, posX+paddleLength, posY+canvas.getHeight()/5, paint);
     }
 
     @Override
     public boolean isCollidingWith(PongObject pongObject) {
         return false;
+    }
+
+    public int getPaddleLength() {
+        return paddleLength;
     }
 
     public void setPaddleLength(int paddleLength) {

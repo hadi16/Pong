@@ -4,8 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.annotation.IdRes;
-import android.view.Menu;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import edu.up.cs301.animation.AnimationSurface;
@@ -22,36 +20,26 @@ import edu.up.cs301.animation.AnimationSurface;
  * 
  */
 public class PongMainActivity extends Activity {
-    private RadioGroup radioGroupDifficulty;
     private AnimationSurface mySurface;
-
-
-	private BallObject ballObject;
-	private int initX;
-	private int initY;
-	private int ballColor;
-
+    private Paddle paddle;
 
 	/**
-	 * creates an AnimationSurface containing a TestAnimator.
+	 * creates an AnimationSurface containing a PongAnimator.
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pong_main);
 
-		initX = 300;
-		initY = 300;
-		ballColor = Color.rgb(0,0,0);
-
-		ballObject = new BallObject(initX,initY,ballColor);
+		Ball ball = new Ball(300, 300, Color.rgb(0,0,0));
+        paddle = new Paddle(300, 300, Color.rgb(0,0,0));
 
 		// Connect the animation surface with the animator
-		mySurface = (AnimationSurface) this.findViewById(R.id.animationSurface);
-		mySurface.setAnimator(new TestAnimator(ballObject));
+		mySurface = (AnimationSurface) findViewById(R.id.animationSurface);
+		mySurface.setAnimator(new PongAnimator(ball, paddle));
 
         Listener listeners = new Listener();
-        radioGroupDifficulty = (RadioGroup)findViewById(R.id.radioGroupDifficulty);
+        RadioGroup radioGroupDifficulty = (RadioGroup)findViewById(R.id.radioGroupDifficulty);
         radioGroupDifficulty.setOnCheckedChangeListener(listeners);
 	}
 
@@ -62,11 +50,13 @@ public class PongMainActivity extends Activity {
 
             if (checkedId == R.id.radioButtonBeginner) {
                 // Make paddle large
-                System.out.println("Beginner");
+                paddle.setPaddleLength(100);
+                mySurface.invalidate();
             }
             else if (checkedId == R.id.radioButtonExpert) {
                 // Make paddle small
-                System.out.println("Expert");
+                paddle.setPaddleLength(50);
+                mySurface.invalidate();
             }
         }
     }
