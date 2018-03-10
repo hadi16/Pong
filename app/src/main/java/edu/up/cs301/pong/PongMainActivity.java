@@ -1,5 +1,6 @@
 package edu.up.cs301.pong;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -20,6 +21,13 @@ import edu.up.cs301.animation.AnimationSurface;
  */
 public class PongMainActivity extends Activity {
 
+
+	private BallObject ballObject;
+	private int initX;
+	private int initY;
+	private int ballColor;
+
+
 	/**
 	 * creates an AnimationSurface containing a TestAnimator.
 	 */
@@ -28,9 +36,15 @@ public class PongMainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pong_main);
 
+		initX = 100;
+		initY = 100;
+		ballColor = Color.rgb(255,255,255);
+
+		ballObject = new BallObject(initX,initY,ballColor);
+
 		// Connect the animation surface with the animator
 		AnimationSurface mySurface = (AnimationSurface) this
 				.findViewById(R.id.animationSurface);
-		mySurface.setAnimator(new TestAnimator());
+		mySurface.setAnimator(new TestAnimator(ballObject));
 	}
 }

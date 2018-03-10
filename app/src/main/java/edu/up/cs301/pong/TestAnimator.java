@@ -27,6 +27,12 @@ public class TestAnimator implements Animator {
 	private int velY = 2;
 	private int posX = 100;
 	private int posY = 100;
+
+	private BallObject ball;
+
+	public TestAnimator(BallObject ball ){
+		this.ball = ball;
+	}
 	
 	/**
 	 * Interval between animation frames: .03 seconds (i.e., about 33 times
@@ -114,7 +120,8 @@ public class TestAnimator implements Animator {
 		}
 
 
-		g.drawCircle(posX, posY, 60, ballPaint);
+		//g.drawCircle(posX, posY, 60, ballPaint);
+		ball.draw(g);
 		ballPaint.setColor(0xff0000ff);
 	}
 

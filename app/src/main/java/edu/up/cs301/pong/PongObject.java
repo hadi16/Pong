@@ -9,15 +9,15 @@ import android.graphics.Paint;
 
 public abstract class PongObject {
 
-    private int x;
-    private int y;
+    protected int posX;
+    protected int posY;
 
-    private Paint paint;
+    protected Paint paint;
 
     public PongObject( int x, int y, int c ){
 
-        this.x = x;
-        this.y = y;
+        this.posX = x;
+        this.posY = y;
         paint = new Paint();
         paint.setColor(c);
 

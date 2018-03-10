@@ -16,7 +16,7 @@ public class BallObject extends PongObject {
 
     @Override
     public void draw(Canvas g) {
-
+        g.drawCircle(posX, posY, 60, paint);
     }
 
     @Override
