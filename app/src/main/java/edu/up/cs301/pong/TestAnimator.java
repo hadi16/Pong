@@ -25,8 +25,10 @@ public class TestAnimator implements Animator {
 
 	private int velX = 50;
 	private int velY = 20;
-	private int posX = 100;
-	private int posY = 100;
+
+	private int width;
+	private int height;
+
 
 	private BallObject ball;
 
@@ -90,13 +92,16 @@ public class TestAnimator implements Animator {
 			count++;
 		}
 
+		width = g.getWidth();
+		height = g.getHeight();
+
 
 
 
 		wallPaint.setColor(wallColor());
-		g.drawRect(0,0,100,2000,wallPaint);
-		g.drawRect(0,0,2000,100,wallPaint);
-		g.drawRect(1950,0,2100,2000,wallPaint);
+		g.drawRect(0,0,100,g.getHeight(),wallPaint);
+		g.drawRect(0,0,g.getWidth(),100,wallPaint);
+		g.drawRect(g.getWidth()-200,0,g.getWidth(),g.getHeight(),wallPaint);
 		
 		// Determine the pixel position of our ball.  Multiplying by 15
 		// has the effect of moving 15 pixel per frame.  Modding by 600
@@ -156,6 +161,23 @@ public class TestAnimator implements Animator {
 	}
 
 	private int isHittingWall(){
+
+		if( ball.getPosX() <= 100 ){
+
+			return 1;
+		} else if ( ball.getPosX() <= width ){
+
+			return 3;
+		}
+
+		if( ball.getPosY() <= 100 ){
+
+			return 2;
+		} else if( ball.getPosY() >= height ){
+
+			return 4;
+		}
+
 
 		return 0;
 	}
