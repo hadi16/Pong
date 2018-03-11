@@ -8,9 +8,6 @@ import edu.up.cs301.animation.Animator;
 public class PongAnimator implements Animator {
     private Paint wallPaint = new Paint();
 
-    private int velX = 25;
-    private int velY = 10;
-
     private int width;
     private int height;
 
@@ -69,27 +66,31 @@ public class PongAnimator implements Animator {
         Paint ballPaint = new Paint();
         ballPaint.setColor(Color.BLACK);
 
-        ball.setPosX(ball.getPosX()+velX);
-        ball.setPosY(ball.getPosY()+velY);
+        ball.setPosX(ball.getPosX()+ball.getVelX());
+        ball.setPosY(ball.getPosY()+ball.getVelY());
 
         switch (isHittingWall()) {
             case 1:
-                velX *= -1;
+                reverseVelX();
                 break;
             case 2:
-                velY *= -1;
+                reverseVelY();
                 break;
             case 3:
-                velX *= -1;
+                reverseVelX();
                 break;
         }
 
         if (collidingWithPaddle()) {
-            velY *= -1;
+            reverseVelY();
         }
 
         ball.draw(c);
         paddle.draw(c);
+
+        if (ball.getPosY() >= height) {
+            ball = new Ball(Color.rgb(0,0,0));
+        }
     }
 
     /**
@@ -115,9 +116,17 @@ public class PongAnimator implements Animator {
      */
     public void onTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            velX *= -1;
-            velY *= -1;
+            reverseVelX();
+            reverseVelY();
         }
+    }
+
+    private void reverseVelX() {
+        ball.setVelX(ball.getVelX()*-1);
+    }
+
+    private void reverseVelY() {
+        ball.setVelY(ball.getVelY()*-1);
     }
 
     private boolean collidingWithPaddle() {
@@ -139,5 +148,9 @@ public class PongAnimator implements Animator {
         }
 
         return 0;
+    }
+
+    public void setBall(Ball ball) {
+        this.ball = ball;
     }
 }

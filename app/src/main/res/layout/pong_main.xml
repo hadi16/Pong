@@ -6,22 +6,30 @@
     <RadioGroup
         android:id="@+id/radioGroupDifficulty"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radioButtonBeginner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Beginner Mode"/>
 
         <RadioButton
             android:id="@+id/radioButtonExpert"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Expert Mode"/>
+
     </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonReadyAddBall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap here to add a new ball"/>
 
     <edu.up.cs301.animation.AnimationSurface
         android:id="@+id/animationSurface"
