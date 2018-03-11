@@ -51,13 +51,13 @@ public class PongMainActivity extends Activity {
 
             if (checkedId == R.id.radioButtonBeginner) {
                 // Make paddle large
-                paddle.setPaddleLength(1100);
+                paddle.setLength(1100);
                 paddle.setPosX(474);
                 mySurface.invalidate();
             }
             else if (checkedId == R.id.radioButtonExpert) {
                 // Make paddle small
-                paddle.setPaddleLength(550);
+                paddle.setLength(550);
                 paddle.setPosX(749);
                 mySurface.invalidate();
             }

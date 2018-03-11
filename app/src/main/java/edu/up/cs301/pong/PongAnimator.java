@@ -11,6 +11,8 @@ public class PongAnimator implements Animator {
     private int width;
     private int height;
 
+    private static final int wallWidth = 100;
+
     private Ball ball;
     private Paddle paddle;
 
@@ -58,9 +60,9 @@ public class PongAnimator implements Animator {
         height = c.getHeight();
 
         wallPaint.setColor(wallColor());
-        c.drawRect(0, 0, 100, height, wallPaint);
-        c.drawRect(0, 0, width, 100, wallPaint);
-        c.drawRect(width-100, 0, width, height, wallPaint);
+        c.drawRect(0, 0, wallWidth, height, wallPaint);
+        c.drawRect(0, 0, width, wallWidth, wallPaint);
+        c.drawRect(width-wallWidth, 0, width, height, wallPaint);
 
         // Draw the ball in the correct position.
         Paint ballPaint = new Paint();
@@ -130,20 +132,20 @@ public class PongAnimator implements Animator {
     }
 
     private boolean collidingWithPaddle() {
-        return ball.getPosY() >= height-100 && ball.getPosX() >= paddle.getPosX()
-                && ball.getPosX() <= paddle.getPosX()+paddle.getPaddleLength();
+        return ball.getPosY() >= height-paddle.getWidth() && ball.getPosX() >= paddle.getPosX()
+                && ball.getPosX() <= paddle.getPosX()+paddle.getLength();
     }
 
     private int isHittingWall() {
-        if (ball.getPosX() <= 100) {
+        if (ball.getPosX() <= wallWidth) {
             return 1;
         }
 
-        if (ball.getPosY() <= 100) {
+        if (ball.getPosY() <= wallWidth) {
             return 2;
         }
 
-        if (ball.getPosX() >= width-100) {
+        if (ball.getPosX() >= width-wallWidth) {
             return 3;
         }
 
