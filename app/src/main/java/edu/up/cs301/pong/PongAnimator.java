@@ -6,16 +6,10 @@ import android.view.MotionEvent;
 import edu.up.cs301.animation.Animator;
 
 public class PongAnimator implements Animator {
-    // Counts the number of logical clock ticks
-    private int count = 0;
-
-    // Whether clock is ticking backwards
-    private boolean goBackwards = false;
-
     private Paint wallPaint = new Paint();
 
-    private int velX = 50;
-    private int velY = 20;
+    private int velX = 25;
+    private int velY = 10;
 
     private int width;
     private int height;
@@ -54,18 +48,7 @@ public class PongAnimator implements Animator {
      * @return the wall color onto which we will draw the image.
      */
     private int wallColor() {
-        //create/return the wall color
         return Color.rgb(100, 100, 100);
-    }
-
-    /**
-     * Tells the animation whether to go backwards.
-     *
-     * @param b true iff animation is to go backwards.
-     */
-    public void goBackwards(boolean b) {
-        // set our instance variable
-        goBackwards = b;
     }
 
     /**
@@ -74,43 +57,39 @@ public class PongAnimator implements Animator {
      * @param c the graphics object on which to draw
      */
     public void tick(Canvas c) {
-        // bump our count either up or down by one, depending on whether
-        // we are in "backwards mode".
-        if (goBackwards) {
-            count--;
-        } else {
-            count++;
-        }
-
         width = c.getWidth();
         height = c.getHeight();
 
         wallPaint.setColor(wallColor());
-        c.drawRect(0, 0, 100, c.getHeight(), wallPaint);
-        c.drawRect(0, 0, c.getWidth(), 100, wallPaint);
-        c.drawRect(c.getWidth()-200, 0, c.getWidth(), c.getHeight(), wallPaint);
-
-        // Determine the pixel position of our ball.  Multiplying by 15
-        // has the effect of moving 15 pixel per frame.  Modding by 600
-        // (with the appropriate correction if the value was negative)
-        // has the effect of "wrapping around" when we get to either end
-        // (since our canvas size is 600 in each dimension).
-        int num = (count*15)%600;
-        if (num < 0) num += 600;
+        c.drawRect(0, 0, 100, height, wallPaint);
+        c.drawRect(0, 0, width, 100, wallPaint);
+        c.drawRect(width-100, 0, width, height, wallPaint);
 
         // Draw the ball in the correct position.
         Paint ballPaint = new Paint();
         ballPaint.setColor(Color.BLACK);
 
-        if (isHittingWall() == 0) {
-            //Ball.posX += velX;
-            ball.setPosX(ball.getPosX()+velX);
-            ball.setPosY(ball.getPosY()+velY);
+        ball.setPosX(ball.getPosX()+velX);
+        ball.setPosY(ball.getPosY()+velY);
+
+        switch (isHittingWall()) {
+            case 1:
+                velX *= -1;
+                break;
+            case 2:
+                velY *= -1;
+                break;
+            case 3:
+                velX *= -1;
+                break;
         }
 
-        //c.drawCircle(posX, posY, 60, ballPaint);
+        if (collidingWithPaddle()) {
+            velY *= -1;
+        }
+
         ball.draw(c);
-        ballPaint.setColor(0xff0000ff);
+        paddle.draw(c);
     }
 
     /**
@@ -136,21 +115,27 @@ public class PongAnimator implements Animator {
      */
     public void onTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            goBackwards = !goBackwards;
+            velX *= -1;
+            velY *= -1;
         }
+    }
+
+    private boolean collidingWithPaddle() {
+        return ball.getPosY() >= height-100 && ball.getPosX() >= paddle.getPosX()
+                && ball.getPosX() <= paddle.getPosX()+paddle.getPaddleLength();
     }
 
     private int isHittingWall() {
         if (ball.getPosX() <= 100) {
             return 1;
-        } else if (ball.getPosX() <= width) {
-            return 3;
         }
 
         if (ball.getPosY() <= 100) {
             return 2;
-        } else if (ball.getPosY() >= height) {
-            return 4;
+        }
+
+        if (ball.getPosX() >= width-100) {
+            return 3;
         }
 
         return 0;

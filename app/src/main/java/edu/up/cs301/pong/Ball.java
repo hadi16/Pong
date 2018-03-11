@@ -11,15 +11,4 @@ public class Ball extends PongObject {
     public void draw(Canvas g) {
         g.drawCircle(posX, posY, 60, paint);
     }
-
-    @Override
-    public boolean isCollidingWith(PongObject pongObject) {
-        if (pongObject instanceof Paddle) {
-            Paddle paddle = (Paddle) pongObject;
-            if (this.posY <= paddle.posY && this.posX >= paddle.posX && this.posX <= paddle.posX+paddle.getPaddleLength()) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

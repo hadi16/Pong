@@ -8,17 +8,6 @@ import android.widget.RadioGroup;
 
 import edu.up.cs301.animation.AnimationSurface;
 
-/**
- * PongMainActivity
- * 
- * This is the activity for the Pong game. It attaches a PongAnimator to
- * an AnimationSurface.
- * 
- * @author Andrew Nuxoll
- * @author Steven R. Vegdahl
- * @version July 2013
- * 
- */
 public class PongMainActivity extends Activity {
     private AnimationSurface mySurface;
     private Paddle paddle;
@@ -32,7 +21,7 @@ public class PongMainActivity extends Activity {
 		setContentView(R.layout.pong_main);
 
 		Ball ball = new Ball(300, 300, Color.rgb(0,0,0));
-        paddle = new Paddle(300, 300, Color.rgb(0,0,0));
+        paddle = new Paddle(Color.rgb(100,100,100));
 
 		// Connect the animation surface with the animator
 		mySurface = (AnimationSurface) findViewById(R.id.animationSurface);
@@ -41,6 +30,7 @@ public class PongMainActivity extends Activity {
         Listener listeners = new Listener();
         RadioGroup radioGroupDifficulty = (RadioGroup)findViewById(R.id.radioGroupDifficulty);
         radioGroupDifficulty.setOnCheckedChangeListener(listeners);
+        radioGroupDifficulty.check(R.id.radioButtonBeginner);
 	}
 
 	private class Listener implements RadioGroup.OnCheckedChangeListener{
@@ -50,12 +40,14 @@ public class PongMainActivity extends Activity {
 
             if (checkedId == R.id.radioButtonBeginner) {
                 // Make paddle large
-                paddle.setPaddleLength(100);
+                paddle.setPaddleLength(1100);
+                paddle.setPosX(474);
                 mySurface.invalidate();
             }
             else if (checkedId == R.id.radioButtonExpert) {
                 // Make paddle small
-                paddle.setPaddleLength(50);
+                paddle.setPaddleLength(550);
+                paddle.setPosX(749);
                 mySurface.invalidate();
             }
         }
