@@ -3,27 +3,43 @@
               android:layout_height="fill_parent"
               android:orientation="vertical">
 
-    <RadioGroup
-        android:id="@+id/radioGroupDifficulty"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <RadioButton
-            android:id="@+id/radioButtonBeginner"
-            android:layout_width="match_parent"
+        <RadioGroup
+            android:id="@+id/radioGroupDifficulty"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Beginner Mode"/>
+            android:orientation="horizontal"
+            android:layout_weight="2"
+            >
 
-        <RadioButton
-            android:id="@+id/radioButtonExpert"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Expert Mode"/>
+            <RadioButton
+                android:id="@+id/radioButtonBeginner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Beginner Mode"/>
 
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/radioButtonExpert"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Expert Mode"/>
+
+        </RadioGroup>
+
+        <Button
+            android:text="Toggle Collision"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonCollision"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonReadyAddBall"

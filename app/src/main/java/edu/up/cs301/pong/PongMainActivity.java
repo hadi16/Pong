@@ -14,7 +14,9 @@ public class PongMainActivity extends Activity {
     private AnimationSurface mySurface;
     private PongAnimator pongAnimator;
     private Button buttonReadyAddBall;
+    private Button buttonToggleCollision;
     private Paddle paddle;
+
 
 	/**
 	 * creates an AnimationSurface containing a PongAnimator.
@@ -41,6 +43,9 @@ public class PongMainActivity extends Activity {
 
         buttonReadyAddBall = (Button)findViewById(R.id.buttonReadyAddBall);
         buttonReadyAddBall.setOnClickListener(listeners);
+
+        buttonToggleCollision = (Button)findViewById(R.id.buttonCollision);
+        buttonToggleCollision.setOnClickListener(listeners);
 	}
 
 	private class Listener implements RadioGroup.OnCheckedChangeListener,
@@ -65,9 +70,12 @@ public class PongMainActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            if (v.getId() != R.id.buttonReadyAddBall) return;
 
-            pongAnimator.setBall(new Ball(Color.rgb(0,0,0)));
+            if( v.getId() == R.id.buttonReadyAddBall) {
+                pongAnimator.addBall(new Ball(Color.rgb((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256))));
+            } else if( v.getId() == R.id.buttonCollision ){
+                pongAnimator.toggleCollision();
+            }
         }
     }
 }

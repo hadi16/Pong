@@ -1,7 +1,10 @@
 package edu.up.cs301.pong;
 
 import android.graphics.*;
+import android.util.Log;
 import android.view.MotionEvent;
+
+import java.util.ArrayList;
 
 import edu.up.cs301.animation.Animator;
 
@@ -13,11 +16,14 @@ public class PongAnimator implements Animator {
 
     private static final int wallWidth = 100;
 
-    private Ball ball;
+    private ArrayList<Ball> balls;
     private Paddle paddle;
 
+    private boolean collideMode = false;
+
     public PongAnimator(Ball ball, Paddle paddle) {
-        this.ball = ball;
+        balls = new ArrayList<>();
+        this.balls.add(ball);
         this.paddle = paddle;
     }
 
@@ -47,7 +53,7 @@ public class PongAnimator implements Animator {
      * @return the wall color onto which we will draw the image.
      */
     private int wallColor() {
-        return Color.rgb(100, 100, 100);
+        return Color.rgb(100,100,100);
     }
 
     /**
@@ -67,33 +73,67 @@ public class PongAnimator implements Animator {
         // Draw the ball in the correct position.
         Paint ballPaint = new Paint();
         ballPaint.setColor(Color.BLACK);
+        for( Ball ball : balls ) {
+            ball.setPosX(ball.getPosX() + ball.getVelX());
+            ball.setPosY(ball.getPosY() + ball.getVelY());
 
-        ball.setPosX(ball.getPosX()+ball.getVelX());
-        ball.setPosY(ball.getPosY()+ball.getVelY());
+            switch (ball.isHittingWall(width, wallWidth)) {
+                case 1:
+                    ball.reverseVelX();
+                    break;
+                case 2:
+                    ball.reverseVelY();
+                    break;
+                case 3:
+                    ball.reverseVelX();
+                    break;
+            }
 
-        switch (isHittingWall()) {
-            case 1:
-                reverseVelX();
+            if (ball.isCollidingWithPaddle(height,paddle)) {
+                ball.reverseVelY();
+            }
+
+            if( collideMode ){
+                //Log.i("ran","ran");
+
+                for( int i = 0; i < balls.size(); i++ ){
+
+                    for( int j = i; j < balls.size(); j++ ){
+
+                        if( i != j ){
+
+                            if( balls.get(i).isCollidingWithBall(balls.get(j))){
+                                balls.get(i).reverseVelY();
+                                balls.get(i).reverseVelX();
+                                balls.get(j).reverseVelX();
+                                balls.get(j).reverseVelY();
+                            }
+
+                        }
+
+
+
+                    }
+
+                }
+
+
+            }
+
+            ball.draw(c);
+            paddle.draw(c);
+
+            if (ball.getPosY() >= height) {
+                balls.remove(ball);
                 break;
-            case 2:
-                reverseVelY();
-                break;
-            case 3:
-                reverseVelX();
-                break;
+            }
+        }
+        for(Ball b : balls ){
+            b.draw(c);
         }
 
-        if (collidingWithPaddle()) {
-            reverseVelY();
-        }
-
-        ball.draw(c);
-        paddle.draw(c);
-
-        if (ball.getPosY() >= height) {
-            ball = new Ball(Color.rgb(0,0,0));
-        }
     }
+
 
     /**
      * Tells that we never pause.
@@ -118,41 +158,22 @@ public class PongAnimator implements Animator {
      */
     public void onTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            reverseVelX();
-            reverseVelY();
+            for( Ball b : balls ){
+                b.reverseVelX();
+                b.reverseVelY();
+            }
         }
     }
 
-    private void reverseVelX() {
-        ball.setVelX(ball.getVelX()*-1);
+
+
+
+    public void addBall(Ball ball) {
+        this.balls.add(ball);
     }
 
-    private void reverseVelY() {
-        ball.setVelY(ball.getVelY()*-1);
+    public void toggleCollision(){
+        collideMode = !collideMode;
     }
 
-    private boolean collidingWithPaddle() {
-        return ball.getPosY() >= height-paddle.getWidth() && ball.getPosX() >= paddle.getPosX()
-                && ball.getPosX() <= paddle.getPosX()+paddle.getLength();
-    }
-
-    private int isHittingWall() {
-        if (ball.getPosX() <= wallWidth) {
-            return 1;
-        }
-
-        if (ball.getPosY() <= wallWidth) {
-            return 2;
-        }
-
-        if (ball.getPosX() >= width-wallWidth) {
-            return 3;
-        }
-
-        return 0;
-    }
-
-    public void setBall(Ball ball) {
-        this.ball = ball;
-    }
 }
