@@ -42,7 +42,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/buttonReadyAddBall"
+        android:id="@+id/buttonAddBall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Tap here to add a new ball"/>

@@ -4,75 +4,112 @@ import android.graphics.Canvas;
 
 import java.util.Random;
 
+/**
+ * Class: Ball
+ * This class represents a ball in the Pong game.
+ *
+ * @author Alex Hadi
+ * @author Jason Twigg
+ * @version March 17, 2018
+ */
 public class Ball extends PongObject {
-    private Random rand = new Random();
+    // Generates a random velocity in x and y between -50 and 50.
+    private int velX = new Random().nextInt(101)-50;
+    private int velY = new Random().nextInt(101)-50;
 
-    private int velX = rand.nextInt(101)-50;
-    private int velY = rand.nextInt(101)-50;
+    // Constant for the radius of a ball.
+    private static final int radius = 60;
 
-    private int radius = 60;
-
+    /**
+     * Constructor: Ball
+     * Creates a ball (isn't created at the bottom of the screen initially).
+     *
+     * @param c The color of the ball.
+     */
     public Ball(int c) {
-        // Ball shouldn't be all the way at the bottom of screen upon creation.
-        super(new Random().nextInt(1848)+100, new Random().nextInt(764)+100, c);
+        super(new Random().nextInt(PongAnimator.width-Wall.getWidth()-
+                Paddle.getWidth())+Wall.getWidth(), new Random().nextInt
+                (2*PongAnimator.height/3)+Wall.getWidth(), c);
     }
 
+    /**
+     * Method: draw
+     * Draws the ball on the screen.
+     *
+     * @param c The Canvas object.
+     */
     @Override
-    public void draw(Canvas canvas) {
-        canvas.drawCircle(posX, posY, radius, paint);
+    public void draw(Canvas c) {
+        c.drawCircle(posX, posY, radius, paint);
     }
 
-    public int getVelX() {
-        return velX;
-    }
-
-    public void setVelX(int velX) {
-        this.velX = velX;
-    }
-
-    public int getVelY() {
-        return velY;
-    }
-
-    public void setVelY(int velY) {
-        this.velY = velY;
-    }
-
-    public int getRadius() { return radius; }
-
-    public int isHittingWall(int width, int wallWidth){
-        if (posX-radius <= wallWidth && velX <= 0) {
+    /**
+     * Method: isHittingWall
+     * Returns which wall is being hit by the ball (if any).
+     *
+     * @return Which wall the ball is hitting (0: no wall, 1: left wall,
+     * 2: top wall, 3: right wall).
+     */
+    public int isHittingWall(){
+        if (posX-radius <= Wall.getWidth() && velX <= 0) {
             return 1;
         }
-
-        if (posY-radius <= wallWidth && velY <= 0) {
+        if (posY-radius <= Wall.getWidth() && velY <= 0) {
             return 2;
         }
-
-        if (posX+radius >= width-wallWidth && velX >= 0) {
+        if (posX+radius >= PongAnimator.width-Wall.getWidth() && velX >= 0) {
             return 3;
         }
-
         return 0;
     }
 
-    public boolean isCollidingWithPaddle(int height, Paddle paddle){
-        return posY+radius >= height-paddle.getWidth()/2 && posX >= paddle.getPosX()
-                && posX <= paddle.getPosX()+paddle.getLength();
+    /**
+     * Method: isCollidingWithPaddle
+     * Returns a boolean for whether the ball is colliding with the paddle.
+     *
+     * @param paddle The Paddle object.
+     * @return True if ball is colliding with paddle, otherwise false.
+     */
+    public boolean isCollidingWithPaddle(Paddle paddle){
+        return posY+radius >= PongAnimator.height-Paddle.getWidth()/2
+                && posX+radius >= paddle.getPosX()
+                && posX-radius <= paddle.getPosX()+paddle.getLength();
     }
 
+    /**
+     * Method: reverseVelX
+     * Helper method that changes the sign of velX.
+     */
     public void reverseVelX() {
-        velX = (velX*-1);
+        velX *= -1;
     }
 
-    public void reverseVelY() {velY = (velY*-1); }
-
-    public boolean isCollidingWithBall( Ball b ){
-
-        double distance = Math.pow(Math.pow((posX - b.getPosX()),2) + Math.pow((posY - b.getPosY()),2),.5);
-
-        return distance <= b.getRadius();
-
+    /**
+     * Method: reverseVelY
+     * Helper method that changes the sign of velY.
+     */
+    public void reverseVelY() {
+        velY *= -1;
     }
 
+    /**
+     * Method: isCollidingWithBall
+     * Returns a boolean for whether this ball is colliding with another ball.
+     *
+     * @param b The Ball object for the other ball to check.
+     * @return True if colliding with that ball, otherwise false.
+     */
+    public boolean isCollidingWithBall(Ball b) {
+        double distance = Math.pow(Math.pow((posX - b.getPosX()),2)
+                + Math.pow((posY - b.getPosY()) ,2), 0.5);
+        return distance <= radius;
+    }
+
+    // Getters for x & y velocity of the ball.
+    public int getVelX() {
+        return velX;
+    }
+    public int getVelY() {
+        return velY;
+    }
 }

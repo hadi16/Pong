@@ -1,83 +1,105 @@
 package edu.up.cs301.pong;
 
 import android.graphics.*;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import edu.up.cs301.animation.Animator;
 
+/**
+ * Class: PongAnimator
+ * This class is for the animator.
+ *
+ * @author Alex Hadi
+ * @author Jason Twigg
+ * @version March 17, 2018
+ */
 public class PongAnimator implements Animator {
-    private Paint wallPaint = new Paint();
+    // Static variables for width and height of the canvas.
+    public static int width = 2048;
+    public static int height = 1200;
 
-    private int width;
-    private int height;
+    // Balls: ArrayList for multiple balls enhancement.
+    private ArrayList<Ball> balls = new ArrayList<>();
 
-    private static final int wallWidth = 100;
-
-    private ArrayList<Ball> balls;
+    // Paddle and Wall objects.
     private Paddle paddle;
+    private Wall wall = new Wall();
 
+    // To allow for toggling of the collision.
     private boolean collideMode = false;
 
+    /**
+     * Constructor: PongAnimator
+     * Initializes the animator with one ball and the paddle.
+     *
+     * @param ball The Ball object.
+     * @param paddle The Paddle object.
+     */
     public PongAnimator(Ball ball, Paddle paddle) {
-        balls = new ArrayList<>();
         this.balls.add(ball);
         this.paddle = paddle;
     }
 
     /**
-     * Interval between animation frames: .03 seconds (i.e., about 33 times
-     * per second).
+     * Method: interval
+     * Required for Animator implementation (overridden).
+     * Interval between animation frames: .03 seconds (about 33 times per sec)
      *
-     * @return the time interval between frames, in milliseconds.
+     * @return the time interval between frames in milliseconds.
      */
+    @Override
     public int interval() {
         return 30;
     }
 
     /**
-     * The background color: a light blue.
+     * Method: backgroundColor
+     * Required for Animator implementation (overridden).
+     * The background color, which is set to white.
      *
-     * @return the background color onto which we will draw the image.
+     * @return The background color onto which the animation is drawn.
      */
+    @Override
     public int backgroundColor() {
-        // create/return the background color
         return Color.rgb(255, 255, 255);
     }
 
     /**
-     * The wall color: a black color.
+     * Method: tick
+     * Action to perform on clock tick.
+     * Required for Animator implementation (overridden).
      *
-     * @return the wall color onto which we will draw the image.
+     * @param c The Canvas object onto which animation is drawn.
      */
-    private int wallColor() {
-        return Color.rgb(100,100,100);
-    }
-
-    /**
-     * Action to perform on clock tick
-     *
-     * @param c the graphics object on which to draw
-     */
+    @Override
     public void tick(Canvas c) {
-        width = c.getWidth();
-        height = c.getHeight();
+        // Draw wall and paddle.
+        wall.draw(c);
+        paddle.draw(c);
 
-        wallPaint.setColor(wallColor());
-        c.drawRect(0, 0, wallWidth, height, wallPaint);
-        c.drawRect(0, 0, width, wallWidth, wallPaint);
-        c.drawRect(width-wallWidth, 0, width, height, wallPaint);
+        /*
+         External Citation
+         Date: 17 March 2018
+         Problem: Could not remove an item from list while iterating over it.
+         Resource:
+         https://stackoverflow.com/questions/1196586/
+         calling-remove-in-foreach-loop-in-java
+         Solution: Used iterator directly instead of foreach loop.
+         */
+        // Increment values of the balls with each tick.
+        Iterator<Ball> iterator = balls.iterator();
+        while (iterator.hasNext()) {
+            Ball ball = iterator.next();
 
-        // Draw the ball in the correct position.
-        Paint ballPaint = new Paint();
-        ballPaint.setColor(Color.BLACK);
-        for( Ball ball : balls ) {
+            // Increment the ball position by the velocity.
             ball.setPosX(ball.getPosX() + ball.getVelX());
             ball.setPosY(ball.getPosY() + ball.getVelY());
 
-            switch (ball.isHittingWall(width, wallWidth)) {
+            // Make sure ball bounces off the walls.
+            switch (ball.isHittingWall()) {
                 case 1:
                     ball.reverseVelX();
                     break;
@@ -89,91 +111,89 @@ public class PongAnimator implements Animator {
                     break;
             }
 
-            if (ball.isCollidingWithPaddle(height,paddle)) {
-                ball.reverseVelY();
-            }
+            // Make ball bounce off paddle.
+            if (ball.isCollidingWithPaddle(paddle)) ball.reverseVelY();
 
-            if( collideMode ){
-                //Log.i("ran","ran");
-
-                for( int i = 0; i < balls.size(); i++ ){
-
-                    for( int j = i; j < balls.size(); j++ ){
-
-                        if( i != j ){
-
-                            if( balls.get(i).isCollidingWithBall(balls.get(j))){
+            // If collideMode is enabled, check for collisions.
+            if (collideMode) {
+                for (int i = 0; i < balls.size(); i++) {
+                    for (int j = i; j < balls.size(); j++) {
+                        if (i != j) {
+                            if (balls.get(i).isCollidingWithBall(balls.get(j))) {
                                 balls.get(i).reverseVelY();
                                 balls.get(i).reverseVelX();
                                 balls.get(j).reverseVelX();
                                 balls.get(j).reverseVelY();
                             }
-
                         }
-
-
-
                     }
-
                 }
-
-
             }
 
-            ball.draw(c);
-            paddle.draw(c);
-
+            // Remove the ball if it goes off the screen.
             if (ball.getPosY() >= height) {
-                balls.remove(ball);
-                break;
+                iterator.remove();
             }
         }
-        for(Ball b : balls ){
-            b.draw(c);
-        }
 
+        // All the balls are drawn.
+        for (Ball ball : balls) ball.draw(c);
     }
 
-
     /**
-     * Tells that we never pause.
+     * Method: doPause
+     * Required by the animator implementation (overridden).
+     * Always returns false, which means that it is never paused.
      *
-     * @return indication of whether to pause
+     * @return Indication of whether to pause as a boolean.
      */
+    @Override
     public boolean doPause() {
         return false;
     }
 
     /**
-     * Tells that we never stop the animation.
+     * Method: doQuit
+     * Required by the animator implementation (overridden).
+     * Always returns false (never quit).
      *
-     * @return indication of whether to quit.
+     * @return Indication of whether to quit as a boolean.
      */
+    @Override
     public boolean doQuit() {
         return false;
     }
 
     /**
-     * reverse the ball's direction when the screen is tapped
+     * Method: onTouch
+     * Required by the animator implementation (overridden).
+     * Reverse each ball's direction when the screen is tapped by the user.
      */
+    @Override
     public void onTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            for( Ball b : balls ){
+            for (Ball b : balls) {
                 b.reverseVelX();
                 b.reverseVelY();
             }
         }
     }
 
-
-
-
+    /**
+     * Method: addBall
+     * Add a Ball object to the balls ArrayList.
+     *
+     * @param ball The Ball object.
+     */
     public void addBall(Ball ball) {
         this.balls.add(ball);
     }
 
+    /**
+     * Method: toggleCollision
+     * Helper method to reverse the value of the collideMode boolean.
+     */
     public void toggleCollision(){
         collideMode = !collideMode;
     }
-
 }

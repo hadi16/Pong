@@ -10,70 +10,104 @@ import android.widget.RadioGroup;
 
 import edu.up.cs301.animation.AnimationSurface;
 
+/**
+ * Class: PongMainActivity
+ * This class contains the code to interact with the XML.
+ *
+ * @author Alex Hadi
+ * @author Jason Twigg
+ * @version March 17, 2018
+ */
 public class PongMainActivity extends Activity {
-    private AnimationSurface mySurface;
+    // Instance variables
     private PongAnimator pongAnimator;
-    private Button buttonReadyAddBall;
-    private Button buttonToggleCollision;
     private Paddle paddle;
 
-
 	/**
-	 * creates an AnimationSurface containing a PongAnimator.
+     * Method: onCreate
+	 * Creates an AnimationSurface containing a PongAnimator.
+     *
+     * @param savedInstanceState The Bundle object for the current instance.
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+        // Required method calls.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pong_main);
 
-		Ball ball = new Ball(Color.rgb(0,0,0));
-        paddle = new Paddle(Color.rgb(100,100,100));
-
+        // Instantiate the Ball, Paddle, PongAnimator, and Listener objects.
+        Ball ball = new Ball(Color.rgb(0,0,0));
+        paddle = new Paddle(Color.RED);
         pongAnimator = new PongAnimator(ball, paddle);
-
-		// Connect the animation surface with the animator
-		mySurface = (AnimationSurface) findViewById(R.id.animationSurface);
-		mySurface.setAnimator(pongAnimator);
-
         Listener listeners = new Listener();
 
-        RadioGroup radioGroupDifficulty = (RadioGroup)findViewById(R.id.radioGroupDifficulty);
+        // Connect the animation surface with the animator.
+		AnimationSurface mySurface =
+                (AnimationSurface)findViewById(R.id.animationSurface);
+        mySurface.setAnimator(pongAnimator);
+
+        // Set RadioGroup properties for beginner/expert mode enhancement.
+        RadioGroup radioGroupDifficulty =
+                (RadioGroup)findViewById(R.id.radioGroupDifficulty);
         radioGroupDifficulty.setOnCheckedChangeListener(listeners);
         radioGroupDifficulty.check(R.id.radioButtonBeginner);
 
-        buttonReadyAddBall = (Button)findViewById(R.id.buttonReadyAddBall);
-        buttonReadyAddBall.setOnClickListener(listeners);
+        // Get the button for adding balls (enhancement) and set its listener.
+        Button buttonAddBall =
+                (Button)findViewById(R.id.buttonAddBall);
+        buttonAddBall.setOnClickListener(listeners);
 
-        buttonToggleCollision = (Button)findViewById(R.id.buttonCollision);
+        // Get the button for toggling collisions and set its listener.
+        Button buttonToggleCollision =
+                (Button)findViewById(R.id.buttonCollision);
         buttonToggleCollision.setOnClickListener(listeners);
 	}
 
+    /**
+     * Inner Class: Listener
+     * Contains code for all listeners.
+     */
 	private class Listener implements RadioGroup.OnCheckedChangeListener,
             View.OnClickListener {
+        /**
+         * Method: onCheckedChanged
+         * Listener for the RadioGroup and RadioButtons.
+         * Executed when user checks different RadioButton.
+         *
+         * @param group The RadioGroup object.
+         * @param checkedId The ID of the checked RadioButton in the group.
+         */
         @Override
         public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+            // Must be the RadioGroup for difficulty.
             if (group.getId() != R.id.radioGroupDifficulty) return;
 
+            // Beginner Mode
             if (checkedId == R.id.radioButtonBeginner) {
-                // Make paddle large
-                paddle.setLength(1100);
-                paddle.setPosX(474);
-                mySurface.invalidate();
+                paddle.setExpertMode(false);
             }
+            // Expert Mode
             else if (checkedId == R.id.radioButtonExpert) {
-                // Make paddle small
-                paddle.setLength(550);
-                paddle.setPosX(749);
-                mySurface.invalidate();
+                paddle.setExpertMode(true);
             }
         }
 
+        /**
+         * Method: onClick
+         * Executed when something is clicked.
+         * @param v The view that was clicked.
+         */
         @Override
         public void onClick(View v) {
-
-            if( v.getId() == R.id.buttonReadyAddBall) {
-                pongAnimator.addBall(new Ball(Color.rgb((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256))));
-            } else if( v.getId() == R.id.buttonCollision ){
+            // Add a new ball to the game.
+            if (v.getId() == R.id.buttonAddBall) {
+                pongAnimator.addBall(new Ball(Color.rgb(
+                        (int) (Math.random() * 256),
+                        (int) (Math.random() * 256),
+                        (int) (Math.random() * 256))));
+            }
+            // Toggle the collisions.
+            else if (v.getId() == R.id.buttonCollision) {
                 pongAnimator.toggleCollision();
             }
         }
