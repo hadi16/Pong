@@ -23,17 +23,17 @@ public class PongMainActivity extends Activity {
     private PongAnimator pongAnimator;
     private Paddle paddle;
 
-	/**
+    /**
      * Method: onCreate
-	 * Creates an AnimationSurface containing a PongAnimator.
+     * Creates an AnimationSurface containing a PongAnimator.
      *
      * @param savedInstanceState The Bundle object for the current instance.
-	 */
+     */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         // Required method calls.
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.pong_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.pong_main);
 
         // Instantiate the Ball, Paddle, PongAnimator, and Listener objects.
         Ball ball = new Ball(Color.rgb(0,0,0));
@@ -42,7 +42,7 @@ public class PongMainActivity extends Activity {
         Listener listeners = new Listener();
 
         // Connect the animation surface with the animator.
-		AnimationSurface mySurface =
+        AnimationSurface mySurface =
                 (AnimationSurface)findViewById(R.id.animationSurface);
         mySurface.setAnimator(pongAnimator);
 
