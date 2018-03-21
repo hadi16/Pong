@@ -28,8 +28,10 @@ public class PongAnimator implements Animator {
     private Paddle paddle;
     private Wall wall = new Wall();
 
-    // To allow for toggling of the collision.
-    private boolean collideMode = false;
+    // To allow for pause of the game
+    private boolean pauseMode = false;
+
+
 
     /**
      * Constructor: PongAnimator
@@ -51,9 +53,7 @@ public class PongAnimator implements Animator {
      * @return the time interval between frames in milliseconds.
      */
     @Override
-    public int interval() {
-        return 30;
-    }
+    public int interval() {return 30;}
 
     /**
      * Method: backgroundColor
@@ -80,6 +80,10 @@ public class PongAnimator implements Animator {
         wall.draw(c);
         paddle.draw(c);
 
+        for (Ball ball : balls) ball.draw(c);
+
+        if(pauseMode) return;
+
         /*
          External Citation
          Date: 17 March 2018
@@ -93,10 +97,6 @@ public class PongAnimator implements Animator {
         Iterator<Ball> iterator = balls.iterator();
         while (iterator.hasNext()) {
             Ball ball = iterator.next();
-
-            // Increment the ball position by the velocity.
-            ball.setPosX(ball.getPosX() + ball.getVelX());
-            ball.setPosY(ball.getPosY() + ball.getVelY());
 
             // Make sure ball bounces off the walls.
             switch (ball.isHittingWall()) {
@@ -114,21 +114,13 @@ public class PongAnimator implements Animator {
             // Make ball bounce off paddle.
             if (ball.isCollidingWithPaddle(paddle)) ball.reverseVelY();
 
-            // If collideMode is enabled, check for collisions.
-            if (collideMode) {
-                for (int i = 0; i < balls.size(); i++) {
-                    for (int j = i; j < balls.size(); j++) {
-                        if (i != j) {
-                            if (balls.get(i).isCollidingWithBall(balls.get(j))) {
-                                balls.get(i).reverseVelY();
-                                balls.get(i).reverseVelX();
-                                balls.get(j).reverseVelX();
-                                balls.get(j).reverseVelY();
-                            }
-                        }
-                    }
-                }
-            }
+
+
+            // Increment the ball position by the velocity.
+            ball.setPosX(ball.getPosX() + ball.getVelX());
+            ball.setPosY(ball.getPosY() + ball.getVelY());
+
+
 
             // Remove the ball if it goes off the screen.
             if (ball.getPosY() >= height) {
@@ -137,7 +129,7 @@ public class PongAnimator implements Animator {
         }
 
         // All the balls are drawn.
-        for (Ball ball : balls) ball.draw(c);
+
     }
 
     /**
@@ -193,7 +185,7 @@ public class PongAnimator implements Animator {
      * Method: toggleCollision
      * Helper method to reverse the value of the collideMode boolean.
      */
-    public void toggleCollision(){
-        collideMode = !collideMode;
+    public void togglePause(){
+        pauseMode = !pauseMode;
     }
 }

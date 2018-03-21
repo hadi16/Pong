@@ -71,9 +71,10 @@ public class Ball extends PongObject {
      * @return True if ball is colliding with paddle, otherwise false.
      */
     public boolean isCollidingWithPaddle(Paddle paddle){
-        return posY+radius >= PongAnimator.height-Paddle.getWidth()/2
+        return posY+radius >= PongAnimator.height-Paddle.getWidth()
                 && posX+radius >= paddle.getPosX()
-                && posX-radius <= paddle.getPosX()+paddle.getLength();
+                && posX-radius <= paddle.getPosX()+paddle.getLength()
+                && velY >= 0;
     }
 
     /**

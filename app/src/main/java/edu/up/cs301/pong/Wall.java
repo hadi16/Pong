@@ -13,7 +13,7 @@ import android.graphics.Color;
  */
 public class Wall extends PongObject {
     // The wall width.
-    private static final int width = 100;
+    private static final int width = 50;
 
     /**
      * Constructor: Wall

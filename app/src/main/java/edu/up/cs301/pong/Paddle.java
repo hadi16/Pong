@@ -15,7 +15,7 @@ public class Paddle extends PongObject {
     private int length;
 
     // Constants for the paddle.
-    private static final int width = 100;
+    private static final int width = 50;
     private static final int BEGINNER_LENGTH = 1100;
     private static final int EXPERT_LENGTH = BEGINNER_LENGTH/2;
 

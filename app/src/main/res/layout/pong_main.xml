@@ -33,10 +33,10 @@
         </RadioGroup>
 
         <Button
-            android:text="Toggle Collision"
+            android:text="Toggle Pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonCollision"
+            android:id="@+id/buttonPause"
             android:layout_weight="1" />
 
     </LinearLayout>

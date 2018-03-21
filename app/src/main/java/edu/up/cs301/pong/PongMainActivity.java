@@ -58,9 +58,9 @@ public class PongMainActivity extends Activity {
         buttonAddBall.setOnClickListener(listeners);
 
         // Get the button for toggling collisions and set its listener.
-        Button buttonToggleCollision =
-                (Button)findViewById(R.id.buttonCollision);
-        buttonToggleCollision.setOnClickListener(listeners);
+        Button buttonTogglePause =
+                (Button)findViewById(R.id.buttonPause);
+        buttonTogglePause.setOnClickListener(listeners);
 	}
 
     /**
@@ -107,8 +107,8 @@ public class PongMainActivity extends Activity {
                         (int) (Math.random() * 256))));
             }
             // Toggle the collisions.
-            else if (v.getId() == R.id.buttonCollision) {
-                pongAnimator.toggleCollision();
+            else if (v.getId() == R.id.buttonPause) {
+                pongAnimator.togglePause();
             }
         }
     }
