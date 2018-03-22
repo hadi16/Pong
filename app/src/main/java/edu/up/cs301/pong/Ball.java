@@ -30,6 +30,18 @@ public class Ball extends PongObject {
 
     /**
      * Constructor: Ball
+     * Creates a ball with a specific x and y position.
+     *
+     * @param xPos The x position.
+     * @param yPos The y position.
+     * @param color The color.
+     */
+    public Ball(int xPos, int yPos, int color) {
+        super(xPos, yPos, color);
+    }
+
+    /**
+     * Constructor: Ball
      * Creates a ball (isn't created at the bottom of the screen initially).
      *
      * @param c The color of the ball.
@@ -146,5 +158,17 @@ public class Ball extends PongObject {
     }
     public int getChangeSize() {
         return changeSize;
+    }
+    public void setVelX(int velX) {
+        this.velX = velX;
+    }
+    public void setVelY(int velY) {
+        this.velY = velY;
+    }
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+    public void setChangeSize(int changeSize) {
+        this.changeSize = changeSize;
     }
 }

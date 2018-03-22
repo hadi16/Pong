@@ -30,7 +30,7 @@ public class PongAnimator implements Animator {
     public static int height = 1200;
 
     // Balls: ArrayList for multiple balls enhancement.
-    private ArrayList<Ball> balls = new ArrayList<>();
+    private ArrayList<Ball> balls;
 
     // Paddle and Wall objects.
     private Paddle paddle;
@@ -50,7 +50,10 @@ public class PongAnimator implements Animator {
      * @param paddle The Paddle object.
      */
     public PongAnimator(Ball ball, Paddle paddle) {
-        this.balls.add(ball);
+        if (balls == null) {
+            balls = new ArrayList<>();
+            this.balls.add(ball);
+        }
         this.paddle = paddle;
     }
 
@@ -161,6 +164,7 @@ public class PongAnimator implements Animator {
                 osw.write(Integer.toString(b.getRadius()) + "\n");
                 osw.write(Integer.toString(b.getChangeSize()) + "\n");
             }
+            osw.close();
         }
         catch (IOException ioe) {
         }
@@ -171,11 +175,28 @@ public class PongAnimator implements Animator {
      * This is called when the application is reopened.
      */
     public void readState(BufferedReader br) {
+        balls = new ArrayList<>();
         String line = "";
         try {
             while ((line = br.readLine()) != null) {
+                int x = Integer.parseInt(line);
+                int y = Integer.parseInt(line);
+                int color = Integer.parseInt(line);
+                Ball b = new Ball(x, y, color);
 
+                int velX = Integer.parseInt(line);
+                int velY = Integer.parseInt(line);
+                int radius = Integer.parseInt(line);
+                int changeSize = Integer.parseInt(line);
+
+                b.setVelX(velX);
+                b.setVelY(velY);
+                b.setRadius(radius);
+                b.setChangeSize(changeSize);
+
+                addBall(b);
             }
+            br.close();
         }
         catch (IOException ioe) {
         }

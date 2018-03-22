@@ -5,13 +5,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.annotation.IdRes;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.OutputStreamWriter;
 
 import edu.up.cs301.animation.AnimationSurface;
@@ -21,11 +24,13 @@ import edu.up.cs301.animation.AnimationSurface;
  * This class contains the code to interact with the XML.
  *
  * ADDED ENHANCEMENTS:
+ * - Beginner and expert mode for the paddle
+ * - Multiple balls on the screen at once (with button to add balls)
  * - Pause Button (Button that toggles the pausing of the game)
  * - Speed Seekbar (Seekbar that changes the speeds of all of the balls
  * - Color for the all of the Game objects change with every tick
  * - Sizes of the ball oscillate from 10 to 100, increasing by 5 every tick
- * - File IO
+ * - File IO (game saved when app exited and restarted)
  *
  * @author Alex Hadi
  * @author Jason Twigg
@@ -36,10 +41,7 @@ public class PongMainActivity extends Activity {
     private PongAnimator pongAnimator;
     private Paddle paddle;
     private Button buttonTogglePause;
-    private SeekBar speedSeekBar;
     private TextView speedText;
-
-    private int Speed;
 
     /**
      * Method: onCreate
@@ -81,7 +83,7 @@ public class PongMainActivity extends Activity {
         buttonTogglePause.setOnClickListener(listeners);
 
         //Setup the Seekbar and the Textview for the speed Changing
-        speedSeekBar = (SeekBar)findViewById(R.id.seekBarSpeed);
+        SeekBar speedSeekBar = (SeekBar)findViewById(R.id.seekBarSpeed);
         speedSeekBar.setOnSeekBarChangeListener(listeners);
 
         speedText = (TextView)findViewById(R.id.textViewSpeed);
@@ -100,7 +102,13 @@ public class PongMainActivity extends Activity {
 	@Override
     public void onResume() {
         super.onResume();
-        pongAnimator.readState();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("saveData.txt"));
+            pongAnimator.readState(br);
+        }
+        catch (FileNotFoundException fnfe) {
+            Log.i("onResume", "The save file was not found.");
+        }
     }
 
     /**
@@ -118,6 +126,7 @@ public class PongMainActivity extends Activity {
             pongAnimator.saveBallState(osw);
         }
         catch (FileNotFoundException fnfe) {
+            Log.i("onStop", "The save file was not found.");
         }
     }
 
