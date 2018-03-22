@@ -41,11 +41,34 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonAddBall"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tap here to add a new ball"/>
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/buttonAddBall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap here to add a new ball"
+            android:layout_weight="1" />
+
+        <TextView
+            android:text="Speed : 0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewSpeed"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="5dp" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:id="@+id/seekBarSpeed"
+            android:max="100"
+            android:layout_height="wrap_content"
+            android:layout_weight="3" />
+    </LinearLayout>
 
     <edu.up.cs301.animation.AnimationSurface
         android:id="@+id/animationSurface"

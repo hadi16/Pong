@@ -9,6 +9,8 @@ import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,6 +31,10 @@ public class PongMainActivity extends Activity {
     private PongAnimator pongAnimator;
     private Paddle paddle;
     private Button buttonTogglePause;
+    private SeekBar speedSeekBar;
+    private TextView speedText;
+
+    private int Speed;
 
     /**
      * Method: onCreate
@@ -68,6 +74,17 @@ public class PongMainActivity extends Activity {
         buttonTogglePause =
                 (Button)findViewById(R.id.buttonPause);
         buttonTogglePause.setOnClickListener(listeners);
+
+        //Setup the Seekbar and the Textview for the speed Changing
+        speedSeekBar = (SeekBar)findViewById(R.id.seekBarSpeed);
+        speedSeekBar.setOnSeekBarChangeListener(listeners);
+
+        speedText = (TextView)findViewById(R.id.textViewSpeed);
+
+        //start the speed at half speed
+        speedSeekBar.setProgress(50);
+        pongAnimator.setSpeed(50);
+
 	}
 
     /**
@@ -103,7 +120,7 @@ public class PongMainActivity extends Activity {
      * Contains code for all listeners.
      */
 	private class Listener implements RadioGroup.OnCheckedChangeListener,
-            View.OnClickListener {
+            View.OnClickListener, SeekBar.OnSeekBarChangeListener {
         /**
          * Method: onCheckedChanged
          * Listener for the RadioGroup and RadioButtons.
@@ -151,6 +168,29 @@ public class PongMainActivity extends Activity {
                     buttonTogglePause.setText("Pause: OFF");
                 }
             }
+        }
+
+        // checks for the progress of the speed seekbar
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            //check if the seekBar is the speed seekbar and then set the text to resemble
+            //the seekbar and then set the new speed in the animator
+            if( R.id.seekBarSpeed == seekBar.getId() ) {
+                speedText.setText("Speed: " + progress);
+                pongAnimator.setSpeed(progress);
+            }
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
         }
     }
 }

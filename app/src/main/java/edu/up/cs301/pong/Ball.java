@@ -134,7 +134,7 @@ public class Ball extends PongObject {
         return distance <= radius;
     }
 
-    // Getters for x & y velocity of the ball.
+    // Getters for x & y velocity of the ball aswell as radius.
     public int getVelX() {
         return velX;
     }
