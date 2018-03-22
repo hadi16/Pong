@@ -29,8 +29,8 @@ public abstract class PongObject {
      * @param c The color.
      */
     public PongObject(int x, int y, int c) {
-        this.posX = x;
-        this.posY = y;
+        posX = x;
+        posY = y;
         paint = new Paint();
         paint.setColor(c);
     }

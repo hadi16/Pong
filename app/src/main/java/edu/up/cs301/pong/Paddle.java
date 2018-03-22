@@ -46,8 +46,8 @@ public class Paddle extends PongObject {
      * @param expertMode Expert mode (true) or beginner mode (false).
      */
     public void setExpertMode(boolean expertMode) {
-        this.length = expertMode ? EXPERT_LENGTH : BEGINNER_LENGTH;
-        this.posX = (PongAnimator.width-this.length)/2;
+        length = expertMode ? EXPERT_LENGTH : BEGINNER_LENGTH;
+        posX = (PongAnimator.width-length)/2;
     }
 
     // Getters for length and width of paddle.

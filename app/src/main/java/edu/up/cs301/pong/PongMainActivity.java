@@ -27,7 +27,7 @@ import edu.up.cs301.animation.AnimationSurface;
  * - Beginner and expert mode for the paddle
  * - Multiple balls on the screen at once (with button to add balls)
  * - Pause Button (Button that toggles the pausing of the game)
- * - Speed Seekbar (Seekbar that changes the speeds of all of the balls
+ * - Speed SeekBar (SeekBar that changes the speeds of all of the balls)
  * - Color for the all of the Game objects change with every tick
  * - Sizes of the ball oscillate from 10 to 100, increasing by 5 every tick
  * - File IO (game saved when app exited and restarted)
@@ -82,7 +82,7 @@ public class PongMainActivity extends Activity {
                 (Button)findViewById(R.id.buttonPause);
         buttonTogglePause.setOnClickListener(listeners);
 
-        //Setup the Seekbar and the Textview for the speed Changing
+        //Setup the SeekBar and the TextView for the speed Changing
         SeekBar speedSeekBar = (SeekBar)findViewById(R.id.seekBarSpeed);
         speedSeekBar.setOnSeekBarChangeListener(listeners);
 
@@ -104,9 +104,9 @@ public class PongMainActivity extends Activity {
         super.onResume();
         try {
             BufferedReader br = new BufferedReader(new FileReader("saveData.txt"));
-            pongAnimator.readState(br);
+            pongAnimator.readBallState(br);
         }
-        catch (FileNotFoundException fnfe) {
+        catch (FileNotFoundException e) {
             Log.i("onResume", "The save file was not found.");
         }
     }
@@ -125,7 +125,7 @@ public class PongMainActivity extends Activity {
                             Context.MODE_PRIVATE));
             pongAnimator.saveBallState(osw);
         }
-        catch (FileNotFoundException fnfe) {
+        catch (FileNotFoundException e) {
             Log.i("onStop", "The save file was not found.");
         }
     }
@@ -185,27 +185,35 @@ public class PongMainActivity extends Activity {
             }
         }
 
-        // checks for the progress of the speed seekbar
+        /**
+         * Method: onProgressChanged
+         * Executed when the progress of the SeekBar changes.
+         * @param seekBar The SeekBar.
+         * @param progress The current progress.
+         * @param fromUser Whether it came from the user.
+         */
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-            //check if the seekBar is the speed seekbar and then set the text to resemble
-            //the seekbar and then set the new speed in the animator
+            // check if the seekBar is the speed SeekBar and then set the text to resemble
+            // the SeekBar and then sets the new speed in the animator
             if( R.id.seekBarSpeed == seekBar.getId() ) {
                 speedText.setText("Speed: " + progress);
                 pongAnimator.setSpeed(progress);
             }
-
         }
 
+        /**
+         * Required for the SeekBar listener. Not used.
+         */
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
         }
 
+        /**
+         * Required for the SeekBar listener. Not used.
+         */
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
         }
     }
 }

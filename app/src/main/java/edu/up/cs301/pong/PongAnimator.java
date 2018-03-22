@@ -1,15 +1,11 @@
 package edu.up.cs301.pong;
 
-import android.content.Context;
 import android.graphics.*;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,7 +48,7 @@ public class PongAnimator implements Animator {
     public PongAnimator(Ball ball, Paddle paddle) {
         if (balls == null) {
             balls = new ArrayList<>();
-            this.balls.add(ball);
+            balls.add(ball);
         }
         this.paddle = paddle;
     }
@@ -128,7 +124,7 @@ public class PongAnimator implements Animator {
             // Make ball bounce off paddle.
             if (ball.isCollidingWithPaddle(paddle)) ball.reverseVelY();
 
-            // Increment the ball position by the velocity also multiplys the velocity by the speed variable.
+            // Increment the ball position by the velocity also multiplies the velocity by the speed variable.
             ball.setPosX((int)(ball.getPosX() + ball.getVelX()*speed));
             ball.setPosY((int)(ball.getPosY() + ball.getVelY()*speed));
 
@@ -167,18 +163,20 @@ public class PongAnimator implements Animator {
             osw.close();
         }
         catch (IOException ioe) {
+            Log.i("saveBallState", "There was an IO exception.");
         }
     }
 
     /**
-     * Method: readState
+     * Method: readBallState
      * This is called when the application is reopened.
      */
-    public void readState(BufferedReader br) {
+    public void readBallState(BufferedReader br) {
         balls = new ArrayList<>();
-        String line = "";
+        String line;
         try {
             while ((line = br.readLine()) != null) {
+                System.out.println(line);
                 int x = Integer.parseInt(line);
                 int y = Integer.parseInt(line);
                 int color = Integer.parseInt(line);
@@ -199,6 +197,7 @@ public class PongAnimator implements Animator {
             br.close();
         }
         catch (IOException ioe) {
+            Log.i("readBallState", "There was an IO exception.");
         }
     }
 
@@ -248,7 +247,7 @@ public class PongAnimator implements Animator {
      * @param ball The Ball object.
      */
     public void addBall(Ball ball) {
-        this.balls.add(ball);
+        balls.add(ball);
     }
 
     /**

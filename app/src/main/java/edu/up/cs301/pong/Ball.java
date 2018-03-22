@@ -101,20 +101,19 @@ public class Ball extends PongObject {
     /**
      * Method: changeRadius
      * Radius of the ball is incremented or decremented.
-     * Radius ossilates between 10 and 100.
+     * Radius oscillates between 10 and 100.
      */
     public void changeRadius() {
-        if( changeSize == 1 ){
-            radius+=5;
-        } else if( changeSize == 2 ){
-            radius-=5;
+        if(changeSize == 1 ){
+            radius +=5;
+        } else if(changeSize == 2 ){
+            radius -=5;
         }
-        if( radius <= 10 ){
+        if(radius <= 10 ){
             changeSize = 1;
-        } else if ( radius >= 100 ){
+        } else if (radius >= 100 ){
             changeSize = 2;
         }
-
     }
 
     /**
@@ -133,20 +132,7 @@ public class Ball extends PongObject {
         velY *= -1;
     }
 
-    /**
-     * Method: isCollidingWithBall
-     * Returns a boolean for whether this ball is colliding with another ball.
-     *
-     * @param b The Ball object for the other ball to check.
-     * @return True if colliding with that ball, otherwise false.
-     */
-    public boolean isCollidingWithBall(Ball b) {
-        double distance = Math.pow(Math.pow((posX - b.getPosX()),2)
-                + Math.pow((posY - b.getPosY()) ,2), 0.5);
-        return distance <= radius;
-    }
-
-    // Getters for x & y velocity of the ball aswell as radius.
+    // Getters and setters.
     public int getVelX() {
         return velX;
     }
