@@ -39,6 +39,9 @@ public class PongAnimator implements Animator {
     // To allow for pause of the game
     private boolean pauseMode = false;
 
+    //speed for slowing down and speeding up the balls
+    private double speed = 0.5;
+
     /**
      * Constructor: PongAnimator
      * Initializes the animator with one ball and the paddle.
@@ -60,7 +63,7 @@ public class PongAnimator implements Animator {
      */
     @Override
     public int interval() {
-        return 30;
+        return 60;
     }
 
     /**
@@ -122,9 +125,9 @@ public class PongAnimator implements Animator {
             // Make ball bounce off paddle.
             if (ball.isCollidingWithPaddle(paddle)) ball.reverseVelY();
 
-            // Increment the ball position by the velocity.
-            ball.setPosX(ball.getPosX() + ball.getVelX());
-            ball.setPosY(ball.getPosY() + ball.getVelY());
+            // Increment the ball position by the velocity also multiplys the velocity by the speed variable.
+            ball.setPosX((int)(ball.getPosX() + ball.getVelX()*speed));
+            ball.setPosY((int)(ball.getPosY() + ball.getVelY()*speed));
 
             // Radius is incremented or decremented with helper method.
             ball.changeRadius();
@@ -238,5 +241,11 @@ public class PongAnimator implements Animator {
     // Getter for pauseMode.
     public boolean isPauseMode() {
         return pauseMode;
+    }
+
+    //Setter for the speed variable, it also sets it to a percent to make
+    //the calculation easy
+    public void setSpeed(int speed){
+        this.speed = (double)(speed)/100.0;
     }
 }
