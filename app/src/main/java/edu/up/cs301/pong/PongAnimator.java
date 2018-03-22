@@ -1,8 +1,11 @@
 package edu.up.cs301.pong;
 
+import android.content.Context;
 import android.graphics.*;
 import android.view.MotionEvent;
 
+import java.io.File;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -116,6 +119,9 @@ public class PongAnimator implements Animator {
             ball.setPosX(ball.getPosX() + ball.getVelX());
             ball.setPosY(ball.getPosY() + ball.getVelY());
 
+            // Radius is incremented or decremented with helper method.
+            ball.changeRadius();
+
             // Remove the ball if it goes off the screen.
             if (ball.getPosY() >= height) {
                 iterator.remove();
@@ -126,6 +132,26 @@ public class PongAnimator implements Animator {
         for (Ball ball : balls) ball.setRandomColor();
         wall.setRandomColor();
         paddle.setRandomColor();
+    }
+
+    /**
+     * Method: saveState
+     * This is called when the application is closed.
+     *
+     * @param file The file to save the data to.
+     */
+    public void saveState(File file) {
+        /*OutputStream outputStream = openFileOutput("saveData.txt", Context
+                .MODE_PRIVATE);
+        OutputStream outputStream = openFileOutput()*/
+    }
+
+    /**
+     * Method: readState
+     * This is called when the application is reopened.
+     */
+    public void readState() {
+
     }
 
     /**

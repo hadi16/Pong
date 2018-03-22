@@ -18,7 +18,7 @@ public class Ball extends PongObject {
     private int velY = new Random().nextInt(101)-50;
 
     // Constant for the radius of a ball.
-    private static final int radius = 60;
+    private int radius = 60;
 
     /**
      * Constructor: Ball
@@ -78,6 +78,20 @@ public class Ball extends PongObject {
     }
 
     /**
+     * Method: changeRadius
+     * Radius of the ball is incremented or decremented.
+     * Radius always stays between 60 and 100.
+     */
+    public void changeRadius() {
+        if (radius >= 100) {
+            radius--;
+        }
+        else if (radius <= 60) {
+            radius++;
+        }
+    }
+
+    /**
      * Method: reverseVelX
      * Helper method that changes the sign of velX.
      */
@@ -112,5 +126,8 @@ public class Ball extends PongObject {
     }
     public int getVelY() {
         return velY;
+    }
+    public int getRadius() {
+        return radius;
     }
 }

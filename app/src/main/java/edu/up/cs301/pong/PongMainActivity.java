@@ -1,5 +1,6 @@
 package edu.up.cs301.pong;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
@@ -7,6 +8,9 @@ import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+
+import java.io.File;
+import java.io.OutputStream;
 
 import edu.up.cs301.animation.AnimationSurface;
 
@@ -63,6 +67,31 @@ public class PongMainActivity extends Activity {
                 (Button)findViewById(R.id.buttonPause);
         buttonTogglePause.setOnClickListener(listeners);
 	}
+
+    /**
+     * Method: onResume
+     * Called when the application is reopened.
+     * Used to read the state of the app.
+     */
+	@Override
+    public void onResume() {
+        super.onResume();
+        pongAnimator.readState();
+    }
+
+    /**
+     * Method: onStop
+     * Called when the application is terminated.
+     * Used to write the state of the app to a file.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        //OutputStream outputStream = openFileOutput("saveData.txt", Context
+        //        .MODE_PRIVATE);
+        File file = new File(getApplicationContext().getFilesDir(), "saveData.txt");
+        pongAnimator.saveState(file);
+    }
 
     /**
      * Inner Class: Listener
