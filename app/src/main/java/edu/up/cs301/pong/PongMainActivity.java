@@ -20,6 +20,13 @@ import edu.up.cs301.animation.AnimationSurface;
  * Class: PongMainActivity
  * This class contains the code to interact with the XML.
  *
+ * ADDED ENHANCEMENTS:
+ * - Pause Button (Button that toggles the pausing of the game)
+ * - Speed Seekbar (Seekbar that changes the speeds of all of the balls
+ * - Color for the all of the Game objects change with every tick
+ * - Sizes of the ball oscillate from 10 to 100, increasing by 5 every tick
+ * - File IO
+ *
  * @author Alex Hadi
  * @author Jason Twigg
  * @version March 21, 2018
