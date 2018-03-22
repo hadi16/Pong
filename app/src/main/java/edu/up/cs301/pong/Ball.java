@@ -26,7 +26,7 @@ public class Ball extends PongObject {
      * 1 - Increase
      * 2 - Decrease
      */
-    public int changeSize = 1;
+    private int changeSize = 1;
 
     /**
      * Constructor: Ball
@@ -143,5 +143,8 @@ public class Ball extends PongObject {
     }
     public int getRadius() {
         return radius;
+    }
+    public int getChangeSize() {
+        return changeSize;
     }
 }

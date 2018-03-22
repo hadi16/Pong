@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import edu.up.cs301.animation.AnimationSurface;
 
@@ -90,9 +91,10 @@ public class PongMainActivity extends Activity {
     public void onStop() {
         super.onStop();
         try {
-            OutputStream outputStream = openFileOutput("saveData.txt", Context
-                    .MODE_PRIVATE);
-            pongAnimator.saveState(outputStream);
+            OutputStreamWriter osw = new OutputStreamWriter
+                    (getApplicationContext().openFileOutput("saveData.txt",
+                            Context.MODE_PRIVATE));
+            pongAnimator.saveState(osw);
         }
         catch (FileNotFoundException fnfe) {
         }

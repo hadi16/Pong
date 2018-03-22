@@ -57,4 +57,7 @@ public class Paddle extends PongObject {
     public static int getWidth() {
         return width;
     }
+    public static int getExpertLength() {
+        return EXPERT_LENGTH;
+    }
 }
