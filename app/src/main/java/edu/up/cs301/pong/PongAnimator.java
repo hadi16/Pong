@@ -85,6 +85,8 @@ public class PongAnimator implements Animator {
 
         for (Ball ball : balls) ball.draw(c);
 
+        if( pauseMode ) return ;
+
         /*
          External Citation
          Date: 17 March 2018

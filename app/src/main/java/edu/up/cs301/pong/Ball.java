@@ -20,6 +20,14 @@ public class Ball extends PongObject {
     // Constant for the radius of a ball.
     private int radius = 60;
 
+    /*
+     * Int for changing the size of the ball
+     * 0 - No Change
+     * 1 - Increase
+     * 2 - Decrease
+     */
+    public int changeSize = 1;
+
     /**
      * Constructor: Ball
      * Creates a ball (isn't created at the bottom of the screen initially).
@@ -77,18 +85,24 @@ public class Ball extends PongObject {
                 && velY >= 0;
     }
 
+
     /**
      * Method: changeRadius
      * Radius of the ball is incremented or decremented.
-     * Radius always stays between 60 and 100.
+     * Radius ossilates between 10 and 100.
      */
     public void changeRadius() {
-        if (radius >= 100) {
-            radius--;
+        if( changeSize == 1 ){
+            radius+=5;
+        } else if( changeSize == 2 ){
+            radius-=5;
         }
-        else if (radius <= 60) {
-            radius++;
+        if( radius <= 10 ){
+            changeSize = 1;
+        } else if ( radius >= 100 ){
+            changeSize = 2;
         }
+
     }
 
     /**
