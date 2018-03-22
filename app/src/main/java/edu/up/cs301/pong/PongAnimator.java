@@ -138,12 +138,10 @@ public class PongAnimator implements Animator {
      * Method: saveState
      * This is called when the application is closed.
      *
-     * @param file The file to save the data to.
+     * @param outputStream The file output stream.
      */
-    public void saveState(File file) {
-        /*OutputStream outputStream = openFileOutput("saveData.txt", Context
-                .MODE_PRIVATE);
-        OutputStream outputStream = openFileOutput()*/
+    public void saveState(OutputStream outputStream) {
+        //outputStream.write("");
     }
 
     /**
@@ -157,13 +155,13 @@ public class PongAnimator implements Animator {
     /**
      * Method: doPause
      * Required by the animator implementation (overridden).
-     * Returns true if pauseMode is enabled by the pause button.
+     * Always returns false.
      *
      * @return Indication of whether to pause as a boolean.
      */
     @Override
     public boolean doPause() {
-        return pauseMode;
+        return false;
     }
 
     /**

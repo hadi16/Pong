@@ -4,12 +4,14 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.FileUriExposedException;
 import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.OutputStream;
 
 import edu.up.cs301.animation.AnimationSurface;
@@ -87,10 +89,13 @@ public class PongMainActivity extends Activity {
     @Override
     public void onStop() {
         super.onStop();
-        //OutputStream outputStream = openFileOutput("saveData.txt", Context
-        //        .MODE_PRIVATE);
-        File file = new File(getApplicationContext().getFilesDir(), "saveData.txt");
-        pongAnimator.saveState(file);
+        try {
+            OutputStream outputStream = openFileOutput("saveData.txt", Context
+                    .MODE_PRIVATE);
+            pongAnimator.saveState(outputStream);
+        }
+        catch (FileNotFoundException fnfe) {
+        }
     }
 
     /**
