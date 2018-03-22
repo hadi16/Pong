@@ -16,12 +16,13 @@ import edu.up.cs301.animation.AnimationSurface;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 17, 2018
+ * @version March 21, 2018
  */
 public class PongMainActivity extends Activity {
     // Instance variables
     private PongAnimator pongAnimator;
     private Paddle paddle;
+    private Button buttonTogglePause;
 
     /**
      * Method: onCreate
@@ -58,7 +59,7 @@ public class PongMainActivity extends Activity {
         buttonAddBall.setOnClickListener(listeners);
 
         // Get the button for toggling collisions and set its listener.
-        Button buttonTogglePause =
+        buttonTogglePause =
                 (Button)findViewById(R.id.buttonPause);
         buttonTogglePause.setOnClickListener(listeners);
 	}
@@ -109,6 +110,12 @@ public class PongMainActivity extends Activity {
             // Toggle the collisions.
             else if (v.getId() == R.id.buttonPause) {
                 pongAnimator.togglePause();
+                if (pongAnimator.isPauseMode()) {
+                    buttonTogglePause.setText("Pause: ON");
+                }
+                else {
+                    buttonTogglePause.setText("Pause: OFF");
+                }
             }
         }
     }

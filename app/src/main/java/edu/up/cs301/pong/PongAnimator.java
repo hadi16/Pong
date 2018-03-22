@@ -14,7 +14,7 @@ import edu.up.cs301.animation.Animator;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 17, 2018
+ * @version March 21, 2018
  */
 public class PongAnimator implements Animator {
     // Static variables for width and height of the canvas.
@@ -30,8 +30,6 @@ public class PongAnimator implements Animator {
 
     // To allow for pause of the game
     private boolean pauseMode = false;
-
-
 
     /**
      * Constructor: PongAnimator
@@ -53,7 +51,9 @@ public class PongAnimator implements Animator {
      * @return the time interval between frames in milliseconds.
      */
     @Override
-    public int interval() {return 30;}
+    public int interval() {
+        return 30;
+    }
 
     /**
      * Method: backgroundColor
@@ -81,8 +81,6 @@ public class PongAnimator implements Animator {
         paddle.draw(c);
 
         for (Ball ball : balls) ball.draw(c);
-
-        if(pauseMode) return;
 
         /*
          External Citation
@@ -114,34 +112,27 @@ public class PongAnimator implements Animator {
             // Make ball bounce off paddle.
             if (ball.isCollidingWithPaddle(paddle)) ball.reverseVelY();
 
-
-
             // Increment the ball position by the velocity.
             ball.setPosX(ball.getPosX() + ball.getVelX());
             ball.setPosY(ball.getPosY() + ball.getVelY());
-
-
 
             // Remove the ball if it goes off the screen.
             if (ball.getPosY() >= height) {
                 iterator.remove();
             }
         }
-
-        // All the balls are drawn.
-
     }
 
     /**
      * Method: doPause
      * Required by the animator implementation (overridden).
-     * Always returns false, which means that it is never paused.
+     * Returns true if pauseMode is enabled by the pause button.
      *
      * @return Indication of whether to pause as a boolean.
      */
     @Override
     public boolean doPause() {
-        return false;
+        return pauseMode;
     }
 
     /**
@@ -182,10 +173,15 @@ public class PongAnimator implements Animator {
     }
 
     /**
-     * Method: toggleCollision
-     * Helper method to reverse the value of the collideMode boolean.
+     * Method: togglePause
+     * Helper method to reverse the value of the pauseMode boolean.
      */
-    public void togglePause(){
+    public void togglePause() {
         pauseMode = !pauseMode;
+    }
+
+    // Getter for pauseMode.
+    public boolean isPauseMode() {
+        return pauseMode;
     }
 }

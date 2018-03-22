@@ -10,7 +10,7 @@ import java.util.Random;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 17, 2018
+ * @version March 21, 2018
  */
 public class Ball extends PongObject {
     // Generates a random velocity in x and y between -50 and 50.

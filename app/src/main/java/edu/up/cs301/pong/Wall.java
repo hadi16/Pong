@@ -9,7 +9,7 @@ import android.graphics.Color;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 17, 2018
+ * @version March 21, 2018
  */
 public class Wall extends PongObject {
     // The wall width.
