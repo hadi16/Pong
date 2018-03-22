@@ -67,7 +67,8 @@
             android:id="@+id/seekBarSpeed"
             android:max="100"
             android:layout_height="wrap_content"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 
     <edu.up.cs301.animation.AnimationSurface
