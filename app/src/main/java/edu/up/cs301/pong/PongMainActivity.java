@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
-import android.os.FileUriExposedException;
 import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.Button;
@@ -12,9 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import edu.up.cs301.animation.AnimationSurface;
@@ -111,7 +108,7 @@ public class PongMainActivity extends Activity {
             OutputStreamWriter osw = new OutputStreamWriter
                     (getApplicationContext().openFileOutput("saveData.txt",
                             Context.MODE_PRIVATE));
-            pongAnimator.saveState(osw);
+            pongAnimator.saveBallState(osw);
         }
         catch (FileNotFoundException fnfe) {
         }

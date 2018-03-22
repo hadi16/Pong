@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.*;
 import android.view.MotionEvent;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -142,12 +145,12 @@ public class PongAnimator implements Animator {
     }
 
     /**
-     * Method: saveState
+     * Method: saveBallState
      * This is called when the application is closed.
      *
      * @param osw The file output stream.
      */
-    public void saveState(OutputStreamWriter osw) {
+    public void saveBallState(OutputStreamWriter osw) {
         try {
             for (Ball b : balls) {
                 osw.write(Integer.toString(b.posX) + "\n");
@@ -167,8 +170,15 @@ public class PongAnimator implements Animator {
      * Method: readState
      * This is called when the application is reopened.
      */
-    public void readState() {
+    public void readState(BufferedReader br) {
+        String line = "";
+        try {
+            while ((line = br.readLine()) != null) {
 
+            }
+        }
+        catch (IOException ioe) {
+        }
     }
 
     /**
