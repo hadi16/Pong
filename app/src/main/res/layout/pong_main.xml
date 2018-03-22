@@ -68,7 +68,7 @@
             android:max="100"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="13dp" />
     </LinearLayout>
 
     <edu.up.cs301.animation.AnimationSurface
