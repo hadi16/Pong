@@ -5,7 +5,9 @@ import android.graphics.*;
 import android.view.MotionEvent;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -143,10 +145,22 @@ public class PongAnimator implements Animator {
      * Method: saveState
      * This is called when the application is closed.
      *
-     * @param outputStream The file output stream.
+     * @param osw The file output stream.
      */
-    public void saveState(OutputStream outputStream) {
-        //outputStream.write("");
+    public void saveState(OutputStreamWriter osw) {
+        try {
+            for (Ball b : balls) {
+                osw.write(Integer.toString(b.posX) + "\n");
+                osw.write(Integer.toString(b.posY) + "\n");
+                osw.write(Integer.toString(b.paint.getColor()) + "\n");
+                osw.write(Integer.toString(b.getVelX()) + "\n");
+                osw.write(Integer.toString(b.getVelY()) + "\n");
+                osw.write(Integer.toString(b.getRadius()) + "\n");
+                osw.write(Integer.toString(b.getChangeSize()) + "\n");
+            }
+        }
+        catch (IOException ioe) {
+        }
     }
 
     /**
