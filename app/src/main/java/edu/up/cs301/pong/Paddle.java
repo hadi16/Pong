@@ -24,7 +24,8 @@ public class Paddle extends PongObject {
      * Initially set to beginner mode (enhancement).
      */
     public Paddle(int c) {
-        super((PongAnimator.width-BEGINNER_LENGTH)/2, PongAnimator.height-width, c);
+        super((PongAnimator.width-BEGINNER_LENGTH)/2,
+                PongAnimator.height-width, c);
         length = BEGINNER_LENGTH;
     }
 

@@ -103,7 +103,8 @@ public class PongMainActivity extends Activity {
     public void onResume() {
         super.onResume();
         try {
-            BufferedReader br = new BufferedReader(new FileReader("saveData.txt"));
+            BufferedReader br =
+                    new BufferedReader(new FileReader("saveData.txt"));
             pongAnimator.readBallState(br);
         }
         catch (FileNotFoundException e) {
@@ -193,9 +194,10 @@ public class PongMainActivity extends Activity {
          * @param fromUser Whether it came from the user.
          */
         @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            // check if the seekBar is the speed SeekBar and then set the text to resemble
-            // the SeekBar and then sets the new speed in the animator
+        public void onProgressChanged(SeekBar seekBar, int progress,
+                                      boolean fromUser) {
+            // check if the seekBar is the speed SeekBar and then set the text
+            // to resemble the SeekBar & then sets the new speed in animator
             if( R.id.seekBarSpeed == seekBar.getId() ) {
                 speedText.setText("Speed: " + progress);
                 pongAnimator.setSpeed(progress);

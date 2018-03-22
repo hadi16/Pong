@@ -124,7 +124,8 @@ public class PongAnimator implements Animator {
             // Make ball bounce off paddle.
             if (ball.isCollidingWithPaddle(paddle)) ball.reverseVelY();
 
-            // Increment the ball position by the velocity also multiplies the velocity by the speed variable.
+            // Increment the ball position by the velocity also
+            // multiplies the velocity by the speed variable.
             ball.setPosX((int)(ball.getPosX() + ball.getVelX()*speed));
             ball.setPosY((int)(ball.getPosY() + ball.getVelY()*speed));
 
