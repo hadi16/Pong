@@ -89,7 +89,7 @@ public class Ball extends PongObject {
     /**
      * Method: changeRadius
      * Radius of the ball is incremented or decremented.
-     * Radius always stays between 60 and 100.
+     * Radius ossilates between 10 and 100.
      */
     public void changeRadius() {
         if( changeSize == 1 ){
