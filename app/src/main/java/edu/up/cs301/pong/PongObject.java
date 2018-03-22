@@ -1,7 +1,10 @@
 package edu.up.cs301.pong;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+
+import java.util.Random;
 
 /**
  * Class: PongObject
@@ -9,7 +12,7 @@ import android.graphics.Paint;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 17, 2018
+ * @version March 21, 2018
  */
 public abstract class PongObject {
     // Instance variables (all Pong objects have x, y, paint).
@@ -30,6 +33,16 @@ public abstract class PongObject {
         this.posY = y;
         paint = new Paint();
         paint.setColor(c);
+    }
+
+    /**
+     * Method: setRandomColor
+     * Paint color is set to a random color.
+     */
+    public void setRandomColor() {
+        Random random = new Random();
+        paint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
+                random.nextInt(256)));
     }
 
     /**

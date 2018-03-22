@@ -121,6 +121,11 @@ public class PongAnimator implements Animator {
                 iterator.remove();
             }
         }
+
+        // Color of all PongObjects are changed.
+        for (Ball ball : balls) ball.setRandomColor();
+        wall.setRandomColor();
+        paddle.setRandomColor();
     }
 
     /**
