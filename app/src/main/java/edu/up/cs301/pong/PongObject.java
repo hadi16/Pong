@@ -52,6 +52,7 @@ public abstract class PongObject {
      */
     public abstract void draw(Canvas c);
 
+
     // Getters and setters for posX and posY.
     public int getPosX() {
         return posX;

@@ -1,6 +1,8 @@
 package edu.up.cs301.pong;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 import java.util.Random;
 
@@ -16,6 +18,10 @@ public class Ball extends PongObject {
     // Generates a random velocity in x and y between -50 and 50.
     private int velX = new Random().nextInt(101)-50;
     private int velY = new Random().nextInt(101)-50;
+
+
+    private int hitCount;
+    private Paint hitPaint;
 
     // Constant for the radius of a ball.
     private int radius = 60;
@@ -50,6 +56,10 @@ public class Ball extends PongObject {
         super(new Random().nextInt(PongAnimator.width-Wall.getWidth()-
                 Paddle.getWidth())+Wall.getWidth(), new Random().nextInt
                 (2*PongAnimator.height/3)+Wall.getWidth(), c);
+
+        hitCount = 0;
+        hitPaint = new Paint();
+        hitPaint.setColor(Color.BLACK);
     }
 
     /**
@@ -60,7 +70,10 @@ public class Ball extends PongObject {
      */
     @Override
     public void draw(Canvas c) {
+
         c.drawCircle(posX, posY, radius, paint);
+        c.drawText(hitCount+"",posX-radius/4,posY+radius/3,hitPaint);
+
     }
 
     /**
@@ -73,12 +86,15 @@ public class Ball extends PongObject {
     public int isHittingWall(){
         if (posX-radius <= Wall.getWidth() && velX <= 0) {
             return 1;
+
         }
         if (posY-radius <= Wall.getWidth() && velY <= 0) {
             return 2;
+
         }
         if (posX+radius >= PongAnimator.width-Wall.getWidth() && velX >= 0) {
             return 3;
+
         }
         return 0;
     }
@@ -114,6 +130,8 @@ public class Ball extends PongObject {
         } else if (radius >= 100 ){
             changeSize = 2;
         }
+
+        hitPaint.setTextSize(radius);
     }
 
     /**
@@ -156,5 +174,13 @@ public class Ball extends PongObject {
     }
     public void setChangeSize(int changeSize) {
         this.changeSize = changeSize;
+    }
+
+    public void setHitCount ( int hitCount ){
+        this.hitCount = hitCount;
+    }
+
+    public int getHitCount(){
+        return hitCount;
     }
 }

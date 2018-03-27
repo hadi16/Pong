@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import edu.up.cs301.animation.Animator;
 
@@ -24,6 +25,11 @@ public class PongAnimator implements Animator {
     // Static variables for width and height of the canvas.
     public static int width = 2048;
     public static int height = 1200;
+
+    Random random;
+    private Paint scorePaint;
+
+    private int scoreCount;
 
     // Balls: ArrayList for multiple balls enhancement.
     private ArrayList<Ball> balls;
@@ -51,6 +57,12 @@ public class PongAnimator implements Animator {
             balls.add(ball);
         }
         this.paddle = paddle;
+
+        this.scoreCount = 0;
+        scorePaint = new Paint();
+        scorePaint.setTextSize(150f);
+
+        random = new Random();
     }
 
     /**
@@ -89,6 +101,9 @@ public class PongAnimator implements Animator {
         // Draw wall and paddle.
         wall.draw(c);
         paddle.draw(c);
+        scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
+                random.nextInt(256)));
+        c.drawText("Score: " + scoreCount, c.getWidth()/2 - 300,c.getHeight()/2,scorePaint);
 
         for (Ball ball : balls) ball.draw(c);
 
@@ -108,21 +123,42 @@ public class PongAnimator implements Animator {
         while (iterator.hasNext()) {
             Ball ball = iterator.next();
 
+            int incrementVelX = (10-(int)(Math.random()*21));
+            int incrementVelY = (10-(int)(Math.random()*21));
+
             // Make sure ball bounces off the walls.
             switch (ball.isHittingWall()) {
                 case 1:
                     ball.reverseVelX();
+                    ball.setVelX(ball.getVelX()+incrementVelX);
+                    ball.setVelY(ball.getVelY()+incrementVelY);
+                    ball.setHitCount(ball.getHitCount()+1);
+                    scoreCount+=ball.getHitCount();
                     break;
                 case 2:
                     ball.reverseVelY();
+                    ball.setVelY(ball.getVelY()+incrementVelX);
+                    ball.setVelY(ball.getVelY()+incrementVelY);
+                    ball.setHitCount(ball.getHitCount()+1);
+                    scoreCount+=ball.getHitCount();
                     break;
                 case 3:
                     ball.reverseVelX();
+                    ball.setVelX(ball.getVelX()+incrementVelX);
+                    ball.setVelY(ball.getVelY()+incrementVelY);
+                    ball.setHitCount(ball.getHitCount()+1);
+                    scoreCount+=ball.getHitCount();
                     break;
             }
 
             // Make ball bounce off paddle.
-            if (ball.isCollidingWithPaddle(paddle)) ball.reverseVelY();
+            if (ball.isCollidingWithPaddle(paddle)){
+                ball.reverseVelY();
+                ball.setVelX(ball.getVelX()+incrementVelX);
+                ball.setVelY(ball.getVelY()+incrementVelY);
+                ball.setHitCount(ball.getHitCount()+1);
+                scoreCount+=ball.getHitCount();
+            }
 
             // Increment the ball position by the velocity also
             // multiplies the velocity by the speed variable.
@@ -133,7 +169,8 @@ public class PongAnimator implements Animator {
             ball.changeRadius();
 
             // Remove the ball if it goes off the screen.
-            if (ball.getPosY() >= height) {
+            if (ball.getPosY() >= height+100) {
+                scoreCount-=ball.getHitCount()*5;
                 iterator.remove();
             }
         }
@@ -234,10 +271,26 @@ public class PongAnimator implements Animator {
     @Override
     public void onTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            for (Ball b : balls) {
-                b.reverseVelX();
-                b.reverseVelY();
+
+            if( paddle.contains(event.getX(),event.getY())) {
+                paddle.setSelected(true,(int)event.getX());
+             ;
+            } else {
+                if( event.getY() > 100) {
+                    for (Ball b : balls) {
+                        b.reverseVelX();
+                        b.reverseVelY();
+                    }
+                }
+
             }
+            //Log.i(paddle.contains((int)event.getX(),(int)event.getY())+" ","");
+        } else if ( event.getAction() == MotionEvent.ACTION_UP){
+            paddle.setSelected(false,0);
+
+        } else if ( event.getAction() == MotionEvent.ACTION_MOVE){
+
+            paddle.dragX((int)event.getX());
         }
     }
 
@@ -269,4 +322,6 @@ public class PongAnimator implements Animator {
     public void setSpeed(int speed){
         this.speed = (double)(speed)/100.0;
     }
+
+
 }
