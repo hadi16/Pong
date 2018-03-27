@@ -31,6 +31,8 @@ public class PongAnimator implements Animator {
 
     private int scoreCount;
 
+    private boolean gameOver;
+
     // Balls: ArrayList for multiple balls enhancement.
     private ArrayList<Ball> balls;
 
@@ -63,6 +65,8 @@ public class PongAnimator implements Animator {
         scorePaint.setTextSize(150f);
 
         random = new Random();
+
+        gameOver = false;
     }
 
     /**
@@ -98,11 +102,25 @@ public class PongAnimator implements Animator {
      */
     @Override
     public void tick(Canvas c) {
+
+        scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
+                random.nextInt(256)));
+
+        if( scoreCount < 0 ){
+            gameOver = true;
+        }
+
+        if( gameOver ){
+
+            c.drawText("GAMEOVER :(", c.getWidth()/2 - 500,c.getHeight()/2,scorePaint);
+            return;
+
+        }
+
         // Draw wall and paddle.
         wall.draw(c);
         paddle.draw(c);
-        scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
-                random.nextInt(256)));
+
         c.drawText("Score: " + scoreCount, c.getWidth()/2 - 300,c.getHeight()/2,scorePaint);
 
         for (Ball ball : balls) ball.draw(c);
@@ -169,7 +187,7 @@ public class PongAnimator implements Animator {
             ball.changeRadius();
 
             // Remove the ball if it goes off the screen.
-            if (ball.getPosY() >= height+100) {
+            if (ball.getPosY() >= height+10) {
                 scoreCount-=ball.getHitCount()*5;
                 iterator.remove();
             }
@@ -272,7 +290,10 @@ public class PongAnimator implements Animator {
     public void onTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-            if( paddle.contains(event.getX(),event.getY())) {
+            if( gameOver ){
+                gameOver = !gameOver;
+                scoreCount = 0;
+            } else if( paddle.contains(event.getX(),event.getY())) {
                 paddle.setSelected(true,(int)event.getX());
              ;
             } else {

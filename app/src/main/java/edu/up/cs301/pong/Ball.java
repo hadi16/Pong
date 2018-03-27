@@ -72,7 +72,11 @@ public class Ball extends PongObject {
     public void draw(Canvas c) {
 
         c.drawCircle(posX, posY, radius, paint);
-        c.drawText(hitCount+"",posX-radius/4,posY+radius/3,hitPaint);
+        if( hitCount < 10 ) {
+            c.drawText(hitCount + "", posX - radius / 4, posY + radius / 3, hitPaint);
+        } else {
+            c.drawText(hitCount + "", posX - (int)(radius / 1.75), posY + radius / 3, hitPaint);
+        }
 
     }
 
@@ -132,6 +136,15 @@ public class Ball extends PongObject {
         }
 
         hitPaint.setTextSize(radius);
+    }
+
+    @Override
+    public void setRandomColor() {
+        Random random = new Random();
+        paint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
+                random.nextInt(256)));
+        hitPaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
+                random.nextInt(256)));
     }
 
     /**

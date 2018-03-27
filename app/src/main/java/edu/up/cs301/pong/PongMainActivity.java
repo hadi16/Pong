@@ -31,6 +31,9 @@ import edu.up.cs301.animation.AnimationSurface;
  * - Color for the all of the Game objects change with every tick
  * - Sizes of the ball oscillate from 10 to 100, increasing by 5 every tick
  * - File IO (game saved when app exited and restarted)
+ * - Balls keep track on how many walls they have hit and displays on them in the game
+ * - Score Added that incriments by the hit amount of each ball when it hits a wall or paddle
+ * -
  *
  * @author Alex Hadi
  * @author Jason Twigg
