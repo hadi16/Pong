@@ -1,12 +1,8 @@
 package edu.up.cs301.pong;
 
 import android.graphics.*;
-import android.util.Log;
 import android.view.MotionEvent;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -60,6 +56,7 @@ public class PongAnimator implements Animator {
             balls = new ArrayList<>();
             balls.add(ball);
         }
+
         this.paddle = paddle;
 
         scoreCount = 0;
@@ -71,10 +68,9 @@ public class PongAnimator implements Animator {
         blocks = new Block[20];
         Paint blockPaint = new Paint();
         blockPaint.setColor(Color.BLACK);
-        for( int i = 0; i < 20; i++ ){
-
-            blocks[i] = new Block(((i%5))*width/6+ width/12, ((i/5)+2)*(height/20), width/7, height/25, Color.BLACK );
-
+        for (int i = 0; i < 20; i++) {
+            blocks[i] = new Block(((i%5))*width/6+ width/12,
+                    ((i/5)+2)*(height/20), width/7, height/25, Color.BLACK);
         }
 
         gameOver = false;
@@ -117,33 +113,30 @@ public class PongAnimator implements Animator {
         scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
                 random.nextInt(256)));
 
-        if( scoreCount < 0 ){
+        if (scoreCount < 0) {
             gameOver = true;
         }
 
         if (gameOver) {
-            c.drawText("GAME OVER :(", c.getWidth()/2 - 500,c.getHeight()/2,scorePaint);
+            c.drawText("GAME OVER :(", c.getWidth()/2 - 500, c.getHeight()/2,
+                    scorePaint);
             return;
-
         }
 
         // Draw wall and paddle.
         wall.draw(c);
         paddle.draw(c);
 
-        c.drawText("Score: " + scoreCount, c.getWidth()/2 - 300,c.getHeight()/2,scorePaint);
+        c.drawText("Score: " + scoreCount, c.getWidth()/2 - 300,
+                c.getHeight()/2, scorePaint);
 
         for (Ball ball : balls) ball.draw(c);
 
-        if( pauseMode ) return ;
+        if (pauseMode) return;
 
-        for( Block bl : blocks ){
-
+        for (Block bl : blocks) {
             bl.draw(c);
-
-
         }
-
 
         scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
                 random.nextInt(256)));
@@ -213,85 +206,19 @@ public class PongAnimator implements Animator {
                 iterator.remove();
             }
 
-            for( Block bl : blocks ){
+            for (Block bl : blocks) {
                 if( bl.isSmashed() ) continue;
-                if ( bl.isCollidingWith(ball) == 1 || bl.isCollidingWith(ball) == 0){
-
+                if (bl.isCollidingWith(ball) == 1 || bl.isCollidingWith(ball) == 0){
                     ball.reverseVelY();
                     scoreCount+=10;
                 }
-
-
-
-
-
-
             }
-
         }
 
         // Color of all PongObjects are changed.
         for (Ball ball : balls) ball.setRandomColor();
         wall.setRandomColor();
         paddle.setRandomColor();
-    }
-
-    /**
-     * Method: saveBallState
-     * This is called when the application is closed.
-     *
-     * @param osw The file output stream.
-     */
-    public void saveBallState(OutputStreamWriter osw) {
-        try {
-            for (Ball b : balls) {
-                osw.write(Integer.toString(b.posX) + "\n");
-                osw.write(Integer.toString(b.posY) + "\n");
-                osw.write(Integer.toString(b.paint.getColor()) + "\n");
-                osw.write(Integer.toString(b.getVelX()) + "\n");
-                osw.write(Integer.toString(b.getVelY()) + "\n");
-                osw.write(Integer.toString(b.getRadius()) + "\n");
-                osw.write(Integer.toString(b.getChangeSize()) + "\n");
-            }
-            osw.close();
-        }
-        catch (IOException ioe) {
-            Log.i("saveBallState", "There was an IO exception.");
-        }
-    }
-
-    /**
-     * Method: readBallState
-     * This is called when the application is reopened.
-     */
-    public void readBallState(BufferedReader br) {
-        balls = new ArrayList<>();
-        String line;
-        try {
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-                int x = Integer.parseInt(line);
-                int y = Integer.parseInt(line);
-                int color = Integer.parseInt(line);
-                Ball b = new Ball(x, y, color);
-
-                int velX = Integer.parseInt(line);
-                int velY = Integer.parseInt(line);
-                int radius = Integer.parseInt(line);
-                int changeSize = Integer.parseInt(line);
-
-                b.setVelX(velX);
-                b.setVelY(velY);
-                b.setRadius(radius);
-                b.setChangeSize(changeSize);
-
-                addBall(b);
-            }
-            br.close();
-        }
-        catch (IOException ioe) {
-            Log.i("readBallState", "There was an IO exception.");
-        }
     }
 
     /**
@@ -330,9 +257,8 @@ public class PongAnimator implements Animator {
             if (gameOver) {
                 gameOver = false;
                 scoreCount = 0;
-            } else if( paddle.contains(event.getX(),event.getY())) {
+            } else if (paddle.contains(event.getX(),event.getY())) {
                 paddle.setSelected(true,(int)event.getX());
-             ;
             } else {
                 if( event.getY() > 100) {
                     for (Ball b : balls) {
@@ -340,7 +266,6 @@ public class PongAnimator implements Animator {
                         b.reverseVelY();
                     }
                 }
-
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             paddle.setSelected(false, 0);
@@ -367,13 +292,11 @@ public class PongAnimator implements Animator {
         pauseMode = !pauseMode;
     }
 
-    // Getter for pauseMode.
     public boolean isPauseMode() {
         return pauseMode;
     }
 
-    //Setter for the speed variable, it also sets it to a percent to make
-    //the calculation easy
+    //Setter for the speed variable (sets to percent to make calculation easy)
     public void setSpeed(int speed){
         this.speed = (double)(speed)/100.0;
     }
