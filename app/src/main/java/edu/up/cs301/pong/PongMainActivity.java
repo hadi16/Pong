@@ -33,7 +33,7 @@ import edu.up.cs301.animation.AnimationSurface;
  * - File IO (game saved when app exited and restarted)
  * - Balls keep track on how many walls they have hit and displays on them in the game
  * - Score Added that incriments by the hit amount of each ball when it hits a wall or paddle
- * -
+ * - Added breakout blocks that increase the score and reverse the direction of the ball when hit
  *
  * @author Alex Hadi
  * @author Jason Twigg

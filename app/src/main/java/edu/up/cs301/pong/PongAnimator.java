@@ -46,6 +46,8 @@ public class PongAnimator implements Animator {
     //speed for slowing down and speeding up the balls
     private double speed = 0.5;
 
+    private Block[] blocks;
+
     /**
      * Constructor: PongAnimator
      * Initializes the animator with one ball and the paddle.
@@ -65,6 +67,15 @@ public class PongAnimator implements Animator {
         scorePaint.setTextSize(150f);
 
         random = new Random();
+
+        blocks = new Block[20];
+        Paint blockPaint = new Paint();
+        blockPaint.setColor(Color.BLACK);
+        for( int i = 0; i < 20; i++ ){
+
+            blocks[i] = new Block(((i%5))*width/6+ width/12, ((i/5)+2)*(height/20), width/7, height/25, Color.BLACK );
+
+        }
 
         gameOver = false;
     }
@@ -126,6 +137,14 @@ public class PongAnimator implements Animator {
         for (Ball ball : balls) ball.draw(c);
 
         if( pauseMode ) return ;
+
+        for( Block bl : blocks ){
+
+            bl.draw(c);
+
+
+        }
+
 
         /*
          External Citation
@@ -191,6 +210,22 @@ public class PongAnimator implements Animator {
                 scoreCount-=ball.getHitCount()*5;
                 iterator.remove();
             }
+
+            for( Block bl : blocks ){
+                if( bl.isSmashed() ) continue;
+                if ( bl.isCollidingWith(ball) == 1 || bl.isCollidingWith(ball) == 0){
+
+                    ball.reverseVelY();
+                    scoreCount+=10;
+                }
+
+
+
+
+
+
+            }
+
         }
 
         // Color of all PongObjects are changed.
