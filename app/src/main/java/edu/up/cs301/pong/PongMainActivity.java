@@ -1,6 +1,7 @@
 package edu.up.cs301.pong;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,10 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 import edu.up.cs301.animation.AnimationSurface;
 
@@ -45,6 +43,8 @@ public class PongMainActivity extends Activity {
     private Paddle paddle;
     private Button buttonTogglePause;
     private TextView speedText;
+    private SeekBar speedSeekBar;
+    private RadioGroup radioGroupDifficulty;
 
     /**
      * Method: onCreate
@@ -70,7 +70,7 @@ public class PongMainActivity extends Activity {
         mySurface.setAnimator(pongAnimator);
 
         // Set RadioGroup properties for beginner/expert mode enhancement.
-        RadioGroup radioGroupDifficulty =
+        radioGroupDifficulty =
                 (RadioGroup)findViewById(R.id.radioGroupDifficulty);
         radioGroupDifficulty.setOnCheckedChangeListener(listeners);
         radioGroupDifficulty.check(R.id.radioButtonBeginner);
@@ -86,7 +86,7 @@ public class PongMainActivity extends Activity {
         buttonTogglePause.setOnClickListener(listeners);
 
         //Setup the SeekBar and the TextView for the speed Changing
-        SeekBar speedSeekBar = (SeekBar)findViewById(R.id.seekBarSpeed);
+        speedSeekBar = (SeekBar)findViewById(R.id.seekBarSpeed);
         speedSeekBar.setOnSeekBarChangeListener(listeners);
 
         speedText = (TextView)findViewById(R.id.textViewSpeed);
@@ -94,7 +94,6 @@ public class PongMainActivity extends Activity {
         //start the speed at half speed
         speedSeekBar.setProgress(50);
         pongAnimator.setSpeed(50);
-
 	}
 
     /**
@@ -105,33 +104,73 @@ public class PongMainActivity extends Activity {
 	@Override
     public void onResume() {
         super.onResume();
-        try {
-            BufferedReader br =
-                    new BufferedReader(new FileReader("saveData.txt"));
-            pongAnimator.readBallState(br);
+
+        SharedPreferences pref = getSharedPreferences("PONG_INFO", Context.MODE_PRIVATE);
+
+        pongAnimator.setScoreCount(pref.getInt("scoreCount", 0));
+        pongAnimator.setSpeed(pref.getInt("speed", 50));
+        paddle.setPosX(pref.getInt("paddlePosX", (PongAnimator.width-Paddle.getBeginnerLength())/2));
+        paddle.setPosY(PongAnimator.height-Paddle.getWidth());
+        paddle.setLength(pref.getInt("paddleLength", Paddle.getBeginnerLength()));
+        paddle.setExpertMode(pref.getBoolean("expertMode", false));
+        pongAnimator.setPauseMode(pref.getBoolean("paused", false));
+
+        int ballCount = pref.getInt("ballCount", 0);
+        ArrayList<Ball> balls = new ArrayList<>();
+        pongAnimator.setBalls(balls);
+        for (int i = 0; i<ballCount; i++) {
+            Log.i("onresume", Integer.toString(i));
+            Ball b = new Ball(Color.rgb(0, 0, 0));
+            b.setPosX(pref.getInt("posX"+i, 200));
+            b.setPosY(pref.getInt("posY"+i, 200));
+            b.setVelX(pref.getInt("velX"+i, 20));
+            b.setVelY(pref.getInt("velY"+i, 20));
+            b.setChangeSize(pref.getInt("changeSize"+i, 1));
+            b.setRadius(pref.getInt("radius"+i, 60));
+            b.setHitCount(pref.getInt("hitCount"+i, 0));
+            pongAnimator.addBall(b);
         }
-        catch (FileNotFoundException e) {
-            Log.i("onResume", "The save file was not found.");
-        }
+
+        speedSeekBar.setProgress((int)(pongAnimator.getSpeed()*100));
+        radioGroupDifficulty.check(paddle.isExpertMode() ?
+                R.id.radioButtonExpert : R.id.radioButtonBeginner);
+        buttonTogglePause.setText("Pause: " + (pongAnimator.isPauseMode() ? "ON" : "OFF"));
     }
 
     /**
-     * Method: onStop
+     * Method: onPause
      * Called when the application is terminated.
-     * Used to write the state of the app to a file.
+     * Used to write the state of the app.
      */
     @Override
-    public void onStop() {
-        super.onStop();
-        try {
-            OutputStreamWriter osw = new OutputStreamWriter
-                    (getApplicationContext().openFileOutput("saveData.txt",
-                            Context.MODE_PRIVATE));
-            pongAnimator.saveBallState(osw);
+    protected void onPause() {
+        super.onPause();
+
+        SharedPreferences pref =
+                getSharedPreferences("PONG_INFO", Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = pref.edit();
+
+        prefEditor.putInt("scoreCount", pongAnimator.getScoreCount());
+        prefEditor.putInt("speed", (int)(pongAnimator.getSpeed()*100));
+        prefEditor.putInt("paddlePosX", paddle.getPosX());
+        prefEditor.putInt("paddleLength", paddle.getLength());
+        prefEditor.putBoolean("expertMode", paddle.isExpertMode());
+        prefEditor.putBoolean("paused", pongAnimator.isPauseMode());
+
+        ArrayList<Ball> ballList = pongAnimator.getBalls();
+        prefEditor.putInt("ballCount", ballList.size());
+        for (int i = 0; i<ballList.size(); i++) {
+            Log.i("onpause", Integer.toString(i));
+            Ball b = ballList.get(i);
+            prefEditor.putInt("posX"+i, b.getPosX());
+            prefEditor.putInt("posY"+i, b.getPosY());
+            prefEditor.putInt("velX"+i, b.getVelX());
+            prefEditor.putInt("velY"+i, b.getVelY());
+            prefEditor.putInt("changeSize"+i, b.getChangeSize());
+            prefEditor.putInt("radius"+i, b.getRadius());
+            prefEditor.putInt("hitCount"+i, b.getHitCount());
         }
-        catch (FileNotFoundException e) {
-            Log.i("onStop", "The save file was not found.");
-        }
+        prefEditor.apply();
     }
 
     /**

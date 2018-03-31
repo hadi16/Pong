@@ -18,8 +18,6 @@ public class Ball extends PongObject {
     // Generates a random velocity in x and y between -50 and 50.
     private int velX = new Random().nextInt(101)-50;
     private int velY = new Random().nextInt(101)-50;
-
-
     private int hitCount;
     private Paint hitPaint;
 

@@ -1,7 +1,6 @@
 package edu.up.cs301.pong;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 /**
  * Class: Paddle
@@ -14,9 +13,9 @@ import android.util.Log;
 public class Paddle extends PongObject {
     // Instance variable for length of paddle.
     private int length;
-    private boolean expertMode;
     private boolean selected;
     private int selectedPos;
+    private boolean expertMode;
 
     // Constants for the paddle.
     private static final int width = 50;
@@ -44,15 +43,21 @@ public class Paddle extends PongObject {
         c.drawRect(posX, posY, posX+length, posY+width, paint);
     }
 
-    public void setSelected(boolean selected, int posX ){
+    public void setSelected(boolean selected, int posX) {
         this.selected = selected;
         if (!selected) return;
-        this.selectedPos = posX - this.posX;
+        selectedPos = posX - this.posX;
     }
 
     public void dragX( int posX ){
         if(!selected) return;
         this.posX = posX - selectedPos;
+        if (this.posX >= PongAnimator.width - Wall.getWidth() - length) {
+            this.posX = PongAnimator.width-Wall.getWidth()-length;
+        }
+        if (this.posX <= Wall.getWidth()) {
+            this.posX = Wall.getWidth();
+        }
     }
 
 
@@ -84,7 +89,16 @@ public class Paddle extends PongObject {
     public int getLength() {
         return length;
     }
+    public static int getBeginnerLength() {
+        return BEGINNER_LENGTH;
+    }
+    public void setLength(int length) {
+        this.length = length;
+    }
     public static int getWidth() {
         return width;
+    }
+    public boolean isExpertMode() {
+        return expertMode;
     }
 }

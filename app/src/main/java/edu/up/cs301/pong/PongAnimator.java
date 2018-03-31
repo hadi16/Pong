@@ -1,12 +1,8 @@
 package edu.up.cs301.pong;
 
 import android.graphics.*;
-import android.util.Log;
 import android.view.MotionEvent;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -26,7 +22,7 @@ public class PongAnimator implements Animator {
     public static int width = 2048;
     public static int height = 1200;
 
-    Random random;
+    private Random random;
     private Paint scorePaint;
 
     private int scoreCount;
@@ -60,7 +56,7 @@ public class PongAnimator implements Animator {
         }
         this.paddle = paddle;
 
-        this.scoreCount = 0;
+        scoreCount = 0;
         scorePaint = new Paint();
         scorePaint.setTextSize(150f);
 
@@ -103,18 +99,13 @@ public class PongAnimator implements Animator {
     @Override
     public void tick(Canvas c) {
 
-        scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
-                random.nextInt(256)));
-
         if( scoreCount < 0 ){
             gameOver = true;
         }
 
-        if( gameOver ){
-
-            c.drawText("GAMEOVER :(", c.getWidth()/2 - 500,c.getHeight()/2,scorePaint);
+        if (gameOver) {
+            c.drawText("GAME OVER :(", c.getWidth()/2 - 500,c.getHeight()/2,scorePaint);
             return;
-
         }
 
         // Draw wall and paddle.
@@ -126,6 +117,9 @@ public class PongAnimator implements Animator {
         for (Ball ball : balls) ball.draw(c);
 
         if( pauseMode ) return ;
+
+        scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
+                random.nextInt(256)));
 
         /*
          External Citation
@@ -200,64 +194,6 @@ public class PongAnimator implements Animator {
     }
 
     /**
-     * Method: saveBallState
-     * This is called when the application is closed.
-     *
-     * @param osw The file output stream.
-     */
-    public void saveBallState(OutputStreamWriter osw) {
-        try {
-            for (Ball b : balls) {
-                osw.write(Integer.toString(b.posX) + "\n");
-                osw.write(Integer.toString(b.posY) + "\n");
-                osw.write(Integer.toString(b.paint.getColor()) + "\n");
-                osw.write(Integer.toString(b.getVelX()) + "\n");
-                osw.write(Integer.toString(b.getVelY()) + "\n");
-                osw.write(Integer.toString(b.getRadius()) + "\n");
-                osw.write(Integer.toString(b.getChangeSize()) + "\n");
-            }
-            osw.close();
-        }
-        catch (IOException ioe) {
-            Log.i("saveBallState", "There was an IO exception.");
-        }
-    }
-
-    /**
-     * Method: readBallState
-     * This is called when the application is reopened.
-     */
-    public void readBallState(BufferedReader br) {
-        balls = new ArrayList<>();
-        String line;
-        try {
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-                int x = Integer.parseInt(line);
-                int y = Integer.parseInt(line);
-                int color = Integer.parseInt(line);
-                Ball b = new Ball(x, y, color);
-
-                int velX = Integer.parseInt(line);
-                int velY = Integer.parseInt(line);
-                int radius = Integer.parseInt(line);
-                int changeSize = Integer.parseInt(line);
-
-                b.setVelX(velX);
-                b.setVelY(velY);
-                b.setRadius(radius);
-                b.setChangeSize(changeSize);
-
-                addBall(b);
-            }
-            br.close();
-        }
-        catch (IOException ioe) {
-            Log.i("readBallState", "There was an IO exception.");
-        }
-    }
-
-    /**
      * Method: doPause
      * Required by the animator implementation (overridden).
      * Always returns false.
@@ -290,12 +226,11 @@ public class PongAnimator implements Animator {
     public void onTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-            if( gameOver ){
-                gameOver = !gameOver;
+            if (gameOver) {
+                gameOver = false;
                 scoreCount = 0;
             } else if( paddle.contains(event.getX(),event.getY())) {
                 paddle.setSelected(true,(int)event.getX());
-             ;
             } else {
                 if( event.getY() > 100) {
                     for (Ball b : balls) {
@@ -303,14 +238,10 @@ public class PongAnimator implements Animator {
                         b.reverseVelY();
                     }
                 }
-
             }
-            //Log.i(paddle.contains((int)event.getX(),(int)event.getY())+" ","");
-        } else if ( event.getAction() == MotionEvent.ACTION_UP){
-            paddle.setSelected(false,0);
-
-        } else if ( event.getAction() == MotionEvent.ACTION_MOVE){
-
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            paddle.setSelected(false, 0);
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             paddle.dragX((int)event.getX());
         }
     }
@@ -344,5 +275,27 @@ public class PongAnimator implements Animator {
         this.speed = (double)(speed)/100.0;
     }
 
+    public ArrayList<Ball> getBalls() {
+        return balls;
+    }
 
+    public int getScoreCount() {
+        return scoreCount;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setScoreCount(int scoreCount) {
+        this.scoreCount = scoreCount;
+    }
+
+    public void setPauseMode(boolean pauseMode) {
+        this.pauseMode = pauseMode;
+    }
+
+    public void setBalls(ArrayList<Ball> balls) {
+        this.balls = balls;
+    }
 }
