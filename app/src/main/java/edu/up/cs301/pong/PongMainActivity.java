@@ -14,6 +14,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import edu.up.cs301.animation.AnimationSurface;
 
@@ -96,6 +98,15 @@ public class PongMainActivity extends Activity {
         pongAnimator.setSpeed(50);
 	}
 
+	/*
+     External Citation
+     Date: 28 March 2018
+     Problem: Did not know how to properly implement File IO.
+     Resource:
+     Nux emailed me an example of using onResume and onPause.
+     Solution: Mocked my code off of the code Nux sent me.
+     */
+
     /**
      * Method: onResume
      * Called when the application is reopened.
@@ -122,7 +133,6 @@ public class PongMainActivity extends Activity {
         ArrayList<Ball> balls = new ArrayList<>();
         pongAnimator.setBalls(balls);
         for (int i = 0; i<ballCount; i++) {
-            Log.i("onresume", Integer.toString(i));
             Ball b = new Ball(Color.rgb(0, 0, 0));
             b.setPosX(pref.getInt("posX"+i, 200));
             b.setPosY(pref.getInt("posY"+i, 200));
@@ -131,7 +141,21 @@ public class PongMainActivity extends Activity {
             b.setChangeSize(pref.getInt("changeSize"+i, 1));
             b.setRadius(pref.getInt("radius"+i, 60));
             b.setHitCount(pref.getInt("hitCount"+i, 0));
+            b.setRandomColor();
             pongAnimator.addBall(b);
+        }
+
+        Set<String> blockSet = pref.getStringSet("blockSet", null);
+        if (blockSet != null) {
+            Block[] blocks = new Block[20];
+            for (String s : blockSet) {
+                int i = Integer.parseInt(s);
+                blocks[i] = new Block(((i%5))*PongAnimator.width/6+
+                        PongAnimator.width/12, ((i/5)+2)*
+                        (PongAnimator.height/20), PongAnimator.width/7,
+                        PongAnimator.height/25, Color.BLACK);
+            }
+            pongAnimator.setBlocks(blocks);
         }
 
         speedSeekBar.setProgress((int)(pongAnimator.getSpeed()*100));
@@ -164,7 +188,6 @@ public class PongMainActivity extends Activity {
         ArrayList<Ball> ballList = pongAnimator.getBalls();
         prefEditor.putInt("ballCount", ballList.size());
         for (int i = 0; i<ballList.size(); i++) {
-            Log.i("onpause", Integer.toString(i));
             Ball b = ballList.get(i);
             prefEditor.putInt("posX"+i, b.getPosX());
             prefEditor.putInt("posY"+i, b.getPosY());
@@ -174,6 +197,23 @@ public class PongMainActivity extends Activity {
             prefEditor.putInt("radius"+i, b.getRadius());
             prefEditor.putInt("hitCount"+i, b.getHitCount());
         }
+
+        /*
+         External Citation
+         Date: 28 March 2018
+         Problem: Did not know how to put a string set into SharedPreferences.
+         Resource:
+         https://stackoverflow.com/questions/29195164/
+         android-setting-and-fetching-a-stringset-from-sharedpreferences
+         Solution: Used a HashSet with a Set<String> as was mentioned online.
+         */
+        Set<String> blockSet = new HashSet<>();
+        Block[] blocks = pongAnimator.getBlocks();
+        for (int i = 0; i<blocks.length; i++) {
+            if (blocks[i] != null) blockSet.add(Integer.toString(i));
+        }
+        prefEditor.putStringSet("blockSet", blockSet);
+
         prefEditor.apply();
     }
 

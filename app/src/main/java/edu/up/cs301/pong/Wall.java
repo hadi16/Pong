@@ -25,7 +25,7 @@ public class Wall extends PongObject {
 
     /**
      * Method: draw
-     * Executed when the wall is drawn.
+     * Draws the wall.
      *
      * @param c The Canvas object.
      */

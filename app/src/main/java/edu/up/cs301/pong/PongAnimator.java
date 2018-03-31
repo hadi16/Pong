@@ -109,7 +109,6 @@ public class PongAnimator implements Animator {
      */
     @Override
     public void tick(Canvas c) {
-
         scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
                 random.nextInt(256)));
 
@@ -132,11 +131,11 @@ public class PongAnimator implements Animator {
 
         for (Ball ball : balls) ball.draw(c);
 
-        if (pauseMode) return;
-
         for (Block bl : blocks) {
-            bl.draw(c);
+            if (bl != null) bl.draw(c);
         }
+
+        if (pauseMode) return;
 
         scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
                 random.nextInt(256)));
@@ -206,12 +205,15 @@ public class PongAnimator implements Animator {
                 iterator.remove();
             }
 
-            for (Block bl : blocks) {
-                if( bl.isSmashed() ) continue;
+            for (int i = 0; i<blocks.length; i++) {
+                Block bl = blocks[i];
+
+                if (bl == null) continue;
                 if (bl.isCollidingWith(ball) == 1 ||
                         bl.isCollidingWith(ball) == 0) {
                     ball.reverseVelY();
-                    scoreCount+=10;
+                    blocks[i] = null;
+                    scoreCount += 10;
                 }
             }
         }
@@ -324,5 +326,13 @@ public class PongAnimator implements Animator {
 
     public void setBalls(ArrayList<Ball> balls) {
         this.balls = balls;
+    }
+
+    public Block[] getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(Block[] blocks) {
+        this.blocks = blocks;
     }
 }

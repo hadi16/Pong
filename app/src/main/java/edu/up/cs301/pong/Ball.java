@@ -18,6 +18,8 @@ public class Ball extends PongObject {
     // Generates a random velocity in x and y between -50 and 50.
     private int velX = new Random().nextInt(101)-50;
     private int velY = new Random().nextInt(101)-50;
+
+    // For hit enhancement.
     private int hitCount;
     private Paint hitPaint;
 
@@ -56,7 +58,6 @@ public class Ball extends PongObject {
      */
     @Override
     public void draw(Canvas c) {
-
         c.drawCircle(posX, posY, radius, paint);
         if( hitCount < 10 ) {
             c.drawText(hitCount + "", posX - radius / 4, posY + radius / 3,
@@ -65,7 +66,6 @@ public class Ball extends PongObject {
             c.drawText(hitCount + "", posX - (int)(radius / 1.75),
                     posY + radius / 3, hitPaint);
         }
-
     }
 
     /**
@@ -78,15 +78,12 @@ public class Ball extends PongObject {
     public int isHittingWall(){
         if (posX-radius <= Wall.getWidth() && velX <= 0) {
             return 1;
-
         }
         if (posY-radius <= Wall.getWidth() && velY <= 0) {
             return 2;
-
         }
         if (posX+radius >= PongAnimator.width-Wall.getWidth() && velX >= 0) {
             return 3;
-
         }
         return 0;
     }
@@ -122,15 +119,18 @@ public class Ball extends PongObject {
         } else if (radius >= 100 ){
             changeSize = 2;
         }
-
         hitPaint.setTextSize(radius);
     }
 
+    /**
+     * Method: setRandomColor
+     * Sets the paint and hitPaint to random colors.
+     * Paint is set with super call.
+     */
     @Override
     public void setRandomColor() {
+        super.setRandomColor();
         Random random = new Random();
-        paint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
-                random.nextInt(256)));
         hitPaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
                 random.nextInt(256)));
     }
@@ -164,6 +164,9 @@ public class Ball extends PongObject {
     public int getChangeSize() {
         return changeSize;
     }
+    public int getHitCount(){
+        return hitCount;
+    }
     public void setVelX(int velX) {
         this.velX = velX;
     }
@@ -176,12 +179,7 @@ public class Ball extends PongObject {
     public void setChangeSize(int changeSize) {
         this.changeSize = changeSize;
     }
-
     public void setHitCount ( int hitCount ){
         this.hitCount = hitCount;
-    }
-
-    public int getHitCount(){
-        return hitCount;
     }
 }
