@@ -29,13 +29,13 @@ import edu.up.cs301.animation.AnimationSurface;
  * - Color for the all of the Game objects change with every tick
  * - Sizes of the ball oscillate from 10 to 100, increasing by 5 every tick
  * - File IO (game saved when app exited and restarted)
- * - Balls keep track on how many walls they have hit and displays on them in the game
- * - Score Added that incriments by the hit amount of each ball when it hits a wall or paddle
+ * - Balls keep track on how many walls they have hit & displays this on them
+ * - Score added that increments by the hit amount of each ball when it hits a wall or paddle
  * - Added breakout blocks that increase the score and reverse the direction of the ball when hit
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 21, 2018
+ * @version March 30, 2018
  */
 public class PongMainActivity extends Activity {
     // Instance variables
@@ -105,13 +105,16 @@ public class PongMainActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences pref = getSharedPreferences("PONG_INFO", Context.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("PONG_INFO",
+                Context.MODE_PRIVATE);
 
         pongAnimator.setScoreCount(pref.getInt("scoreCount", 0));
         pongAnimator.setSpeed(pref.getInt("speed", 50));
-        paddle.setPosX(pref.getInt("paddlePosX", (PongAnimator.width-Paddle.getBeginnerLength())/2));
+        paddle.setPosX(pref.getInt("paddlePosX",
+                (PongAnimator.width-Paddle.getBeginnerLength())/2));
         paddle.setPosY(PongAnimator.height-Paddle.getWidth());
-        paddle.setLength(pref.getInt("paddleLength", Paddle.getBeginnerLength()));
+        paddle.setLength(pref.getInt("paddleLength",
+                Paddle.getBeginnerLength()));
         paddle.setExpertMode(pref.getBoolean("expertMode", false));
         pongAnimator.setPauseMode(pref.getBoolean("paused", false));
 
@@ -134,7 +137,8 @@ public class PongMainActivity extends Activity {
         speedSeekBar.setProgress((int)(pongAnimator.getSpeed()*100));
         radioGroupDifficulty.check(paddle.isExpertMode() ?
                 R.id.radioButtonExpert : R.id.radioButtonBeginner);
-        buttonTogglePause.setText("Pause: " + (pongAnimator.isPauseMode() ? "ON" : "OFF"));
+        buttonTogglePause.setText("Pause: " +
+                (pongAnimator.isPauseMode() ? "ON" : "OFF"));
     }
 
     /**

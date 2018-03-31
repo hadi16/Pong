@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 21, 2018
+ * @version March 30, 2018
  */
 public class Ball extends PongObject {
     // Generates a random velocity in x and y between -50 and 50.
@@ -31,18 +31,6 @@ public class Ball extends PongObject {
      * 2 - Decrease
      */
     private int changeSize = 1;
-
-    /**
-     * Constructor: Ball
-     * Creates a ball with a specific x and y position.
-     *
-     * @param xPos The x position.
-     * @param yPos The y position.
-     * @param color The color.
-     */
-    public Ball(int xPos, int yPos, int color) {
-        super(xPos, yPos, color);
-    }
 
     /**
      * Constructor: Ball
@@ -71,9 +59,11 @@ public class Ball extends PongObject {
 
         c.drawCircle(posX, posY, radius, paint);
         if( hitCount < 10 ) {
-            c.drawText(hitCount + "", posX - radius / 4, posY + radius / 3, hitPaint);
+            c.drawText(hitCount + "", posX - radius / 4, posY + radius / 3,
+                    hitPaint);
         } else {
-            c.drawText(hitCount + "", posX - (int)(radius / 1.75), posY + radius / 3, hitPaint);
+            c.drawText(hitCount + "", posX - (int)(radius / 1.75),
+                    posY + radius / 3, hitPaint);
         }
 
     }

@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 21, 2018
+ * @version March 30, 2018
  */
 public abstract class PongObject {
     // Instance variables (all Pong objects have x, y, paint).

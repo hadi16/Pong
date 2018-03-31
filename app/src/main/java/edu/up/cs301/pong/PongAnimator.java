@@ -15,7 +15,7 @@ import edu.up.cs301.animation.Animator;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 21, 2018
+ * @version March 30, 2018
  */
 public class PongAnimator implements Animator {
     // Static variables for width and height of the canvas.
@@ -208,7 +208,8 @@ public class PongAnimator implements Animator {
 
             for (Block bl : blocks) {
                 if( bl.isSmashed() ) continue;
-                if (bl.isCollidingWith(ball) == 1 || bl.isCollidingWith(ball) == 0){
+                if (bl.isCollidingWith(ball) == 1 ||
+                        bl.isCollidingWith(ball) == 0) {
                     ball.reverseVelY();
                     scoreCount+=10;
                 }

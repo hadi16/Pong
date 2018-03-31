@@ -8,7 +8,7 @@ import android.graphics.Canvas;
  *
  * @author Alex Hadi
  * @author Jason Twigg
- * @version March 21, 2018
+ * @version March 30, 2018
  */
 public class Paddle extends PongObject {
     // Instance variable for length of paddle.
