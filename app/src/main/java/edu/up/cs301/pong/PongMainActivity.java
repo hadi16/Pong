@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.annotation.IdRes;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
@@ -31,8 +30,10 @@ import edu.up.cs301.animation.AnimationSurface;
  * - Color for the all of the Game objects change with every tick
  * - Sizes of the ball oscillate from 10 to 100, increasing by 5 every tick
  * - File IO (game saved when app exited and restarted)
- * - Balls keep track on how many walls they have hit & displays this on them
+ * - Balls keep track on how many walls they have hit & displays this on them in the game
  * - Score added that increments by the hit amount of each ball when it hits a wall or paddle
+ * - Game over is incorporated into the game. User can start it again w/ a tap on the screen.
+ * - Balls incorporate randomness when bouncing. The bounce-back is different depending on hit.
  * - Added breakout blocks that increase the score and reverse the direction of the ball when hit
  *
  * @author Alex Hadi
@@ -44,7 +45,7 @@ public class PongMainActivity extends Activity {
     private PongAnimator pongAnimator;
     private Paddle paddle;
     private Button buttonTogglePause;
-    private TextView speedText;
+    private TextView textViewSpeed;
     private SeekBar speedSeekBar;
     private RadioGroup radioGroupDifficulty;
 
@@ -87,13 +88,14 @@ public class PongMainActivity extends Activity {
                 (Button)findViewById(R.id.buttonPause);
         buttonTogglePause.setOnClickListener(listeners);
 
-        //Setup the SeekBar and the TextView for the speed Changing
+        //Setup the SeekBar and the TextView for the changing speed.
         speedSeekBar = (SeekBar)findViewById(R.id.seekBarSpeed);
         speedSeekBar.setOnSeekBarChangeListener(listeners);
 
-        speedText = (TextView)findViewById(R.id.textViewSpeed);
+        // Get the TextView for speed.
+        textViewSpeed = (TextView)findViewById(R.id.textViewSpeed);
 
-        //start the speed at half speed
+        // Start the speed at half speed
         speedSeekBar.setProgress(50);
         pongAnimator.setSpeed(50);
 	}
@@ -110,15 +112,17 @@ public class PongMainActivity extends Activity {
     /**
      * Method: onResume
      * Called when the application is reopened.
-     * Used to read the state of the app.
+     * Used to read the restart the app with the saved state.
      */
 	@Override
     public void onResume() {
         super.onResume();
 
+        // Get the SharedPreferences file.
         SharedPreferences pref = getSharedPreferences("PONG_INFO",
                 Context.MODE_PRIVATE);
 
+        // Set general game values.
         pongAnimator.setScoreCount(pref.getInt("scoreCount", 0));
         pongAnimator.setSpeed(pref.getInt("speed", 50));
         paddle.setPosX(pref.getInt("paddlePosX",
@@ -129,6 +133,7 @@ public class PongMainActivity extends Activity {
         paddle.setExpertMode(pref.getBoolean("expertMode", false));
         pongAnimator.setPauseMode(pref.getBoolean("paused", false));
 
+        // Set all the ball values
         int ballCount = pref.getInt("ballCount", 0);
         ArrayList<Ball> balls = new ArrayList<>();
         pongAnimator.setBalls(balls);
@@ -145,6 +150,7 @@ public class PongMainActivity extends Activity {
             pongAnimator.addBall(b);
         }
 
+        // Set up all the blocks.
         Set<String> blockSet = pref.getStringSet("blockSet", null);
         if (blockSet != null) {
             Block[] blocks = new Block[20];
@@ -158,6 +164,7 @@ public class PongMainActivity extends Activity {
             pongAnimator.setBlocks(blocks);
         }
 
+        // Set the SeekBar and RadioButton.
         speedSeekBar.setProgress((int)(pongAnimator.getSpeed()*100));
         radioGroupDifficulty.check(paddle.isExpertMode() ?
                 R.id.radioButtonExpert : R.id.radioButtonBeginner);
@@ -168,16 +175,18 @@ public class PongMainActivity extends Activity {
     /**
      * Method: onPause
      * Called when the application is terminated.
-     * Used to write the state of the app.
+     * Used to write the state of the app to a SharedPreferences file.
      */
     @Override
     protected void onPause() {
         super.onPause();
 
+        // Create a new SharedPreferences file.
         SharedPreferences pref =
                 getSharedPreferences("PONG_INFO", Context.MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = pref.edit();
 
+        // Save the general game values.
         prefEditor.putInt("scoreCount", pongAnimator.getScoreCount());
         prefEditor.putInt("speed", (int)(pongAnimator.getSpeed()*100));
         prefEditor.putInt("paddlePosX", paddle.getPosX());
@@ -185,6 +194,7 @@ public class PongMainActivity extends Activity {
         prefEditor.putBoolean("expertMode", paddle.isExpertMode());
         prefEditor.putBoolean("paused", pongAnimator.isPauseMode());
 
+        // Save the values for the balls.
         ArrayList<Ball> ballList = pongAnimator.getBalls();
         prefEditor.putInt("ballCount", ballList.size());
         for (int i = 0; i<ballList.size(); i++) {
@@ -207,6 +217,7 @@ public class PongMainActivity extends Activity {
          android-setting-and-fetching-a-stringset-from-sharedpreferences
          Solution: Used a HashSet with a Set<String> as was mentioned online.
          */
+        // Save the values for the blocks.
         Set<String> blockSet = new HashSet<>();
         Block[] blocks = pongAnimator.getBlocks();
         for (int i = 0; i<blocks.length; i++) {
@@ -214,6 +225,7 @@ public class PongMainActivity extends Activity {
         }
         prefEditor.putStringSet("blockSet", blockSet);
 
+        // commit() isn't used because apply() works in the background.
         prefEditor.apply();
     }
 
@@ -285,7 +297,7 @@ public class PongMainActivity extends Activity {
             // check if the seekBar is the speed SeekBar and then set the text
             // to resemble the SeekBar & then sets the new speed in animator
             if( R.id.seekBarSpeed == seekBar.getId() ) {
-                speedText.setText("Speed: " + progress);
+                textViewSpeed.setText("Speed: " + progress);
                 pongAnimator.setSpeed(progress);
             }
         }

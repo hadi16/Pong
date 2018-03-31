@@ -22,11 +22,13 @@ public class PongAnimator implements Animator {
     public static int width = 2048;
     public static int height = 1200;
 
-    private Random random;
-    private Paint scorePaint;
+    private Random random = new Random();
 
+    // For score enhancement
+    private Paint scorePaint;
     private int scoreCount;
 
+    // To allow game to be over.
     private boolean gameOver;
 
     // Balls: ArrayList for multiple balls enhancement.
@@ -39,9 +41,10 @@ public class PongAnimator implements Animator {
     // To allow for pause of the game
     private boolean pauseMode = false;
 
-    //speed for slowing down and speeding up the balls
+    // Speed for slowing down and speeding up the balls
     private double speed = 0.5;
 
+    // Blocks
     private Block[] blocks;
 
     /**
@@ -59,12 +62,12 @@ public class PongAnimator implements Animator {
 
         this.paddle = paddle;
 
+        // For score enhancement.
         scoreCount = 0;
         scorePaint = new Paint();
         scorePaint.setTextSize(150f);
 
-        random = new Random();
-
+        // For blocks enhancement. Blocks are created.
         blocks = new Block[20];
         Paint blockPaint = new Paint();
         blockPaint.setColor(Color.BLACK);
@@ -73,6 +76,7 @@ public class PongAnimator implements Animator {
                     ((i/5)+2)*(height/20), width/7, height/25, Color.BLACK);
         }
 
+        // Game initially isn't over.
         gameOver = false;
     }
 
@@ -109,13 +113,8 @@ public class PongAnimator implements Animator {
      */
     @Override
     public void tick(Canvas c) {
-        scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
-                random.nextInt(256)));
-
-        if (scoreCount < 0) {
-            gameOver = true;
-        }
-
+        // Game is over once the score is negative.
+        if (scoreCount < 0) gameOver = true;
         if (gameOver) {
             c.drawText("GAME OVER :(", c.getWidth()/2 - 500, c.getHeight()/2,
                     scorePaint);
@@ -126,17 +125,18 @@ public class PongAnimator implements Animator {
         wall.draw(c);
         paddle.draw(c);
 
+        // Draw the score text.
         c.drawText("Score: " + scoreCount, c.getWidth()/2 - 300,
                 c.getHeight()/2, scorePaint);
 
+        // Draw the balls and blocks.
         for (Ball ball : balls) ball.draw(c);
+        for (Block bl : blocks) if (bl != null) bl.draw(c);
 
-        for (Block bl : blocks) {
-            if (bl != null) bl.draw(c);
-        }
-
+        // Stop and return if the game is paused.
         if (pauseMode) return;
 
+        // Change color of the score text.
         scorePaint.setColor(Color.rgb(random.nextInt(256), random.nextInt(256),
                 random.nextInt(256)));
 
@@ -152,8 +152,10 @@ public class PongAnimator implements Animator {
         // Increment values of the balls with each tick.
         Iterator<Ball> iterator = balls.iterator();
         while (iterator.hasNext()) {
+            // Get the next ball.
             Ball ball = iterator.next();
 
+            // Set the velocity increments.
             int incrementVelX = (10-(int)(Math.random()*21));
             int incrementVelY = (10-(int)(Math.random()*21));
 
@@ -205,6 +207,7 @@ public class PongAnimator implements Animator {
                 iterator.remove();
             }
 
+            // The blocks are destroyed if they collide with a ball.
             for (int i = 0; i<blocks.length; i++) {
                 Block bl = blocks[i];
 
@@ -256,13 +259,17 @@ public class PongAnimator implements Animator {
     @Override
     public void onTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
+            // Restart game with a tap of the screen.
             if (gameOver) {
                 gameOver = false;
                 scoreCount = 0;
-            } else if (paddle.contains(event.getX(),event.getY())) {
+            }
+            // To allow user to select the paddle.
+            else if (paddle.contains(event.getX(),event.getY())) {
                 paddle.setSelected(true,(int)event.getX());
-            } else {
+            }
+            // Otherwise, reverse direction of all the balls.
+            else {
                 if( event.getY() > 100) {
                     for (Ball b : balls) {
                         b.reverseVelX();
@@ -270,9 +277,13 @@ public class PongAnimator implements Animator {
                     }
                 }
             }
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+        }
+        // To deselect the paddle.
+        else if (event.getAction() == MotionEvent.ACTION_UP) {
             paddle.setSelected(false, 0);
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+        }
+        // To drag the paddle across the screen.
+        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             paddle.dragX((int)event.getX());
         }
     }
@@ -295,43 +306,45 @@ public class PongAnimator implements Animator {
         pauseMode = !pauseMode;
     }
 
-    public boolean isPauseMode() {
-        return pauseMode;
-    }
+    /* Getters and setters below: */
 
     //Setter for the speed variable (sets to percent to make calculation easy)
     public void setSpeed(int speed){
         this.speed = (double)(speed)/100.0;
     }
-
-    public ArrayList<Ball> getBalls() {
-        return balls;
-    }
-
-    public int getScoreCount() {
-        return scoreCount;
-    }
-
+    // Getter for speed (just returns its raw value)
     public double getSpeed() {
         return speed;
     }
 
+    // Getter and setter for scoreCount.
+    public int getScoreCount() {
+        return scoreCount;
+    }
     public void setScoreCount(int scoreCount) {
         this.scoreCount = scoreCount;
     }
 
+    // Getter and setter for pauseMode
+    public boolean isPauseMode() {
+        return pauseMode;
+    }
     public void setPauseMode(boolean pauseMode) {
         this.pauseMode = pauseMode;
     }
 
+    // Getter and setter for balls.
+    public ArrayList<Ball> getBalls() {
+        return balls;
+    }
     public void setBalls(ArrayList<Ball> balls) {
         this.balls = balls;
     }
 
+    // Getter and setter for blocks
     public Block[] getBlocks() {
         return blocks;
     }
-
     public void setBlocks(Block[] blocks) {
         this.blocks = blocks;
     }
